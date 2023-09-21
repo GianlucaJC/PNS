@@ -17,12 +17,12 @@ use App\Models\User;
 				<input name="_token" type="hidden" value="{{ csrf_token() }}" id='token_csrf'>
 			
 				<div class="form-group">
-					<label for="email_parco">Email parco auto</label>
+					<label for="email_parco">Email notifiche</label>
 					<input type="email" class="form-control" id="email_parco" name="email_parco" aria-describedby="email_parco" placeholder="E-mail"  maxlength=150 onkeyup="this.value = this.value.toLowerCase();" value="{{$email_parco ?? ''}}" >
 				</div>
 				<div class="form-group">
-					<label for="email_acquisti">Email ufficio acquisti</label>
-					<input type="email" class="form-control" id="email_acquisti" name="email_acquisti" aria-describedby="email_acquisti" placeholder="E-mail"  maxlength=150 onkeyup="this.value = this.value.toLowerCase();" value="{{$email_acquisti ?? ''}}" >
+					<label for="codici_esclusi">Codici da escludere</label>
+					<input type="text" class="form-control" id="codici_esclusi" name="codici_esclusi" aria-describedby="codici_esclusi" placeholder="Elenco codici"value="{{$codici_esclusi ?? ''}}" >
 				</div>
 
 			<button type="submit" id="btn_save" name="btn_save" class="btn btn-primary">Salva impostazioni</button>
@@ -126,11 +126,11 @@ use App\Models\User;
 				@if(!($user->hasRole('resp')))
 				<div class="row">
 					<div class="col-md-12">
-					<a href="#">
+					<a href="{{route('elenco_pns')}}">
 						<div class="d-grid gap-2 mt-2">
 						  <button class="btn btn-primary" type="button">
-						  <i class="fas fa-users" style='font-size:36px'></i><br>
-							RISORSE UMANE
+						  <i class="far fa-list-alt" style='font-size:36px'></i><br>
+							ELENCO PNS
 						  </button>
 						</div>
 					</a>
@@ -138,18 +138,6 @@ use App\Models\User;
 				</div>
 				@endif
 
-			<div class="row">
-				<div class="col-md-12">
-					<a href="#">
-						<div class="d-grid gap-2 mt-2">
-						  <button class="btn btn-primary" type="button">
-						  <i class="fas fa-cubes" style='font-size:36px'></i><br>
-							AMMINISTRAZIONE
-						  </button>
-						</div>
-					</a>
-				</div>
-			</div>
 		@endif	
 
 		

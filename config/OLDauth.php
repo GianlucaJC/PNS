@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'password' => 'utenti',
+        'passwords' => 'users',
     ],
 
     /*
@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'utenti',
+            'provider' => 'users',
         ],
     ],
 
@@ -64,10 +64,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-		'utenti' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\utenti::class,
-        ],		
 
         // 'users' => [
         //     'driver' => 'database',
@@ -101,12 +97,6 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-
-		'utenti' => [
-			'provider' => 'utenti',
-			'table' => 'password_resets',
-			'expire' => 60,
-		],		
     ],
 
     /*

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,12 +16,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('dashboard', [ 'as' => 'dashboard', 'uses' => 'App\Http\Controllers\MainController@dashboard'])->middleware(['auth']);
 
 Route::post('dashboard', [ 'as' => 'dashboard', 'uses' => 'App\Http\Controllers\MainController@dashboard'])->middleware(['auth']);
+
+
+Route::post('recensione/{id?}', [ 'as' => 'recensione', 'uses' => 'App\Http\Controllers\MainController@recensione'])->middleware(['auth']);
+
+Route::get('recensione/{id?}', [ 'as' => 'recensione', 'uses' => 'App\Http\Controllers\MainController@recensione'])->middleware(['auth']);
+
+
+Route::post('elenco_pns', [ 'as' => 'elenco_pns', 'uses' => 'App\Http\Controllers\MainController@elenco_pns'])->middleware(['auth']);
+Route::get('elenco_pns', [ 'as' => 'elenco_pns', 'uses' => 'App\Http\Controllers\MainController@elenco_pns'])->middleware(['auth']);
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

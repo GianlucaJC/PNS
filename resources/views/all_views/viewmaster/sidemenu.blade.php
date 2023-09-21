@@ -9,11 +9,16 @@ use App\Models\User;
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link">
-      <img src="{{ URL::asset('/') }}dist/img/4.png" alt="PNS Logo" class="brand-image img-circle elevation-5" style="opacity: 5;" >
+      
+	  
+	  <img src="{{ URL::asset('/') }}dist/img/pns.png" alt="PNS Logo" class="brand-image img-circle elevation-5" style="opacity: 5;" >
+	 
       
 	  
 	  
-	  <span class="brand-text font-weight-light">PNS</span>
+	  <span class="brand-text font-weight-light">
+		<small>Prodotti non standard</small>
+	</span>
     </a>
 
     <!-- Sidebar -->
@@ -32,7 +37,7 @@ use App\Models\User;
 			@endif
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+          <a href="#" class="d-block">{{ Auth::user()->operatore}}</a>
         </div>
       </div>
 
@@ -53,84 +58,22 @@ use App\Models\User;
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-			@if ($user->hasRole('coord'))
-			 <li class="nav-item menu">
-				<a href="#" class="nav-link">
-				  <i class="nav-icon fas fa-users"></i>
-				  <p>Risorse Umane
-					<i class="right fas fa-angle-left"></i>
-				  </p>
-				</a>
-				<ul class="nav nav-treeview">
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Registro Servizi</p>
-					</a>
-				  </li>	
-				</ul>  
-			 </li>
-			@endif
-			
-			
 			@if ($user->hasRole('admin'))
 			 <li class="nav-item menu">
 				<a href="#" class="nav-link">
-				  <i class="nav-icon fas fa-users"></i>
-				  <p>Risorse Umane
+				  <i class="fas fa-bars"></i>
+				  <p>Main Menu
 					<i class="right fas fa-angle-left"></i>
 				  </p>
 				</a>
 				<ul class="nav nav-treeview">
 				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Nuova candidatura</p>
+					<a href="{{route('elenco_pns')}}" class="nav-link">
+					  <i class="far fa-list-alt"></i>
+					  <p>Elenco PNS</p>
 					</a>
 				  </li>
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Lista candidature</p>
-					</a>
-				  </li>
-				  
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Gestione Personale</p>
-					</a>
-				  </li>				  
-
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Scadenze Contratti</p>
-					</a>
-				  </li>	
-
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Registro Servizi</p>
-					</a>
-				  </li>	
-
-				
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon" nav-icon"></i>
-					  <p>Giustificativi</p>
-					</a>
-				  </li>	
-					  
-
-				  <li class="nav-item">
-					<a href="#" class="nav-link">
-					  <i class="far fa-circle nav-icon"></i>
-					  <p>Upload/Sospesi Cedolini</p>
-					</a>
-				  </li>			
+		
 					 <li class="nav-item menu">
 						<a href="#" class="nav-link">
 						  <i class="fas fa-cogs"></i>
@@ -142,14 +85,14 @@ use App\Models\User;
 						  <li class="nav-item">
 							<a href="#" class="nav-link">
 							  <i class="far fa-circle nav-icon"></i>
-							  <p>Tipologie di Contratto</p>
+							  <p>Tipologie di ...</p>
 							</a>
 						  </li>
 						
 						  <li class="nav-item">
 							<a href="#" class="nav-link ">
 							  <i class="far fa-circle nav-icon"></i>
-							  <p>Tipo Contratto</p>
+							  <p>Tipo ...</p>
 							</a>
 						  </li>
 

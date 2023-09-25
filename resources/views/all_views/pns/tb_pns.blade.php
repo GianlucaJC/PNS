@@ -109,8 +109,17 @@
 				$scheda_t_status=1;
 				$colo_stato_tec="success";
 			}	
-			if ($pns->sign_scheda_s!=null) $colo_stato_sic="success";
-			if ($pns->sign_cert!=null) $colo_stato_cert="success";
+			$scheda_s_status=0;
+			if ($pns->sign_scheda_s!=null) {
+				$scheda_s_status=1;
+				$colo_stato_sic="success";
+			}	
+			$cert_status=0;
+			if ($pns->sign_cert!=null) {
+				$cert_status=1;
+				$colo_stato_cert="success";
+			}				
+
 			
 			
 			$view_doc="display:none";
@@ -122,6 +131,7 @@
 					$js="";					
 					$js.="$proc.from=1;";
 					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
 					$js.="$proc.resource_file='".$pns->file_etic."';";
 					if ($etic_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
@@ -142,6 +152,7 @@
 					$js="";					
 					$js.="$proc.from=2;";
 					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
 					$js.="$proc.resource_file='".$pns->url_scheda_t."';";
 					if ($scheda_t_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
@@ -155,8 +166,20 @@
 					echo $view_sign;
 				?>			
 				</span>
+				
+				<?php
+					if ($scheda_s_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=3;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
+					$js.="$proc.resource_file='".$pns->url_scheda_s."';";
+					if ($scheda_s_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>				
 				<a href="javasript:void(0)" >
-					<button type="button" class="btn btn-{{$colo_stato_sic}}" {{$stato_sign}}>
+					<button type="button" class="btn btn-{{$colo_stato_sic}}" onclick="{{$js}}" {{$stato_sign}}>
 					<i class="fas fa-shield-alt fa-xs" title="Scheda sicurezza"></i></button>
 				</a>
 				<span class='firme' style='display:none'>
@@ -165,9 +188,19 @@
 					echo $view_sign;
 				?>			
 				</span>
-
+				<?php
+					if ($cert_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=4;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
+					$js.="$proc.resource_file='".$pns->url_cert."';";
+					if ($cert_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>		
 				<a href="javasript:void(0)" >
-					<button type="button" class="btn btn-{{$colo_stato_cert}}" {{$stato_sign}}>
+					<button type="button" class="btn btn-{{$colo_stato_cert}}"  onclick="{{$js}}" {{$stato_sign}}>
 					<i class="fas fa-check-square fa-xs" title="Certificato"></i></button>
 				</a>										
 				<span class='firme' style='display:none'>

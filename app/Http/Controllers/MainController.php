@@ -308,10 +308,51 @@ public function __construct()
 			 $log_event->id_pns=$id_pns_scheda_t;
 			 $log_event->operazione="Sign Scheda Tecnica";
 			 $log_event->modulo="elenco_pns";
-			 $log_event->dettaglio="Data scheda tecnica: ";
+			 $log_event->dettaglio="Data scheda tecnica: ".$data_scheda_t;
 			 $log_event->save();			
 		}
 		
+		if ($btn_sign=="sign_scheda_s") {
+			$url_scheda_s=$request->input("url_scheda_s");
+			if (!preg_match("~^(?:f|ht)tps?://~i", $url_scheda_s)) {
+				$url_scheda_s = "http://" . $url_scheda_s;
+			}
+			
+			$data_scheda_s=$request->input("data_scheda_s");
+			$id_pns_scheda_s=$request->input("id_pns_scheda_s");
+
+			prodotti::where('id', $id_pns_scheda_s)
+			  ->update(['sign_scheda_s' => $id_user,'url_scheda_s'=>$url_scheda_s,'data_scheda_s'=>$data_scheda_s]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_scheda_s;
+			 $log_event->operazione="Sign Scheda Sicurezza";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data scheda sicurezza: ".$data_scheda_s;
+			 $log_event->save();			
+		}		
+
+		if ($btn_sign=="sign_cert") {
+			$url_cert=$request->input("url_cert");
+			if (!preg_match("~^(?:f|ht)tps?://~i", $url_cert)) {
+				$url_cert = "http://" . $url_cert;
+			}
+			
+			$data_cert=$request->input("data_cert");
+			$id_pns_cert=$request->input("id_pns_cert");
+
+			prodotti::where('id', $id_pns_cert)
+			  ->update(['sign_cert' => $id_user,'url_cert'=>$url_cert,'data_cert'=>$data_cert]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_cert;
+			 $log_event->operazione="Sign Certificato";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data certificato: ".$data_cert;
+			 $log_event->save();			
+		}		
 		
 		
 		$btn_remove_etic=$request->input("btn_remove_etic");
@@ -344,8 +385,35 @@ public function __construct()
 			 $log_event->save();				  
 		}
 
+		$btn_remove_scheda_s=$request->input("btn_remove_scheda_s");
+		if ($btn_remove_scheda_s=="remove") {
+			$id_remove_scheda_s=$request->input("id_remove_scheda_s");
+			prodotti::where('id', $id_remove_scheda_s)
+			  ->update(['sign_scheda_s' =>null,'data_scheda_s'=>null,'url_scheda_s'=>null]);
 
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_scheda_s;
+			 $log_event->operazione="Remove Sign Scheda sicurezza";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_sceda_s");
+			 $log_event->save();				  
+		}
 		
+		$btn_remove_cert=$request->input("btn_remove_cert");
+		if ($btn_remove_cert=="remove") {
+			$id_remove_cert=$request->input("id_remove_cert");
+			prodotti::where('id', $id_remove_cert)
+			  ->update(['sign_cert' =>null,'data_cert'=>null,'url_cert'=>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_cert;
+			 $log_event->operazione="Remove Sign Certificato";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_cert");
+			 $log_event->save();				  
+		}		
 		
 		
 		$elenco_pns=DB::table('prodotti')

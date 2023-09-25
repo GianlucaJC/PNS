@@ -88,13 +88,15 @@ $(document).ready( function () {
 
 
 function view_doc() {
-	
-	//dati etichetta
+
+	id_pns=0;from=0;resource_file="";sign_qa=""
 	if( typeof view_doc.from != 'undefined' ) from=view_doc.from
 	if( typeof view_doc.id_pns != 'undefined' ) id_pns=view_doc.id_pns
 	if( typeof view_doc.resource_file != 'undefined' ) 
 		resource_file=view_doc.resource_file
-	//	
+	if( typeof view_doc.sign_qa != 'undefined' ) 
+			sign_qa=view_doc.sign_qa	
+	
 	$("#btn_sign").hide();
 	
 
@@ -117,26 +119,30 @@ function view_doc() {
 	
 	$('#modalvalue').modal('show')		
 	
+	
+	
 	if (from==1 && resource_file.length>0) {
 		filex="allegati/"+id_pns+"/etic/"+resource_file
 		html=`
 			<a href='`+filex+`' target='_blank'>
 				<button type="button" class="btn btn-success" >Apri file etichetta</button>
 			</a>
+		`	
 
-			
-			<button onclick="$('#div_remove_etic').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e file etichetta</button>
-			
-			
-			<div id='div_remove_etic' class='form-group mt-3'  style='display:none'>
-				<label for="motivazione_elimina_etic">Motivazione elimina etichetta e firma*</label>
-				<textarea class="form-control" id="motivazione_elimina_etic"  name="motivazione_elimina_etic" rows="3"></textarea>
-				<input type='hidden' name='id_remove_etic' id='id_remove_etic' value='`+id_pns+`'>
+		if (sign_qa.length==0) {
+			html+=`<button onclick="$('#div_remove_etic').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e file etichetta</button>
 				
-				<button type="submit" onclick='remove_sign_etic()' class="btn btn-primary mt-2" name='btn_remove_etic' value='remove'>Conferma operazione di rimozione firma e file etichetta</button>					
-			</div>
-			
-		`;
+				
+				<div id='div_remove_etic' class='form-group mt-3'  style='display:none'>
+					<label for="motivazione_elimina_etic">Motivazione elimina etichetta e firma*</label>
+					<textarea class="form-control" id="motivazione_elimina_etic"  name="motivazione_elimina_etic" rows="3"></textarea>
+					<input type='hidden' name='id_remove_etic' id='id_remove_etic' value='`+id_pns+`'>
+					
+					<button type="submit" onclick='remove_sign_etic()' class="btn btn-primary mt-2" name='btn_remove_etic' value='remove'>Conferma operazione di rimozione firma e file etichetta</button>					
+				</div>
+			`;
+		}
+		
 	}
 	
 	if (from==2) {
@@ -145,33 +151,84 @@ function view_doc() {
 			<a href='`+url_scheda_t+`' target='_blank'>
 				<button type="button" class="btn btn-success" >Apri Scheda tecnica</button>
 			</a>
+		`	
 
 			
-			<button onclick="$('#div_remove_etic').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e URL scheda tecnica</button>
-			
-			
-			<div id='div_remove_etic' class='form-group mt-3'  style='display:none'>
-				<label for="motivazione_elimina_sceda_t">Motivazione elimina etichetta e firma*</label>
-				<textarea class="form-control" id="motivazione_elimina_sceda_t"  name="motivazione_elimina_sceda_t" rows="3"></textarea>
-				<input type='hidden' name='id_remove_scheda_t' id='id_remove_scheda_t' value='`+id_pns+`'>
+			if (sign_qa.length==0) {
+				html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e URL scheda tecnica</button>
 				
-				<button type="submit" onclick='remove_sign_scheda_t()' class="btn btn-primary mt-2" name='btn_remove_scheda_t' value='remove'>Conferma operazione di rimozione firma e URL scheda tecnica</button>					
+				
+				<div id='div_remove' class='form-group mt-3'  style='display:none'>
+					<label for="motivazione_elimina_sceda_t">Motivazione elimina scheda tecnica e firma*</label>
+					<textarea class="form-control" id="motivazione_elimina_sceda_t"  name="motivazione_elimina_sceda_t" rows="3"></textarea>
+					<input type='hidden' name='id_remove_scheda_t' id='id_remove_scheda_t' value='`+id_pns+`'>
+					
+					<button type="submit" onclick='remove_sign_scheda_t()' class="btn btn-primary mt-2" name='btn_remove_scheda_t' value='remove'>Conferma operazione di rimozione firma e URL scheda tecnica</button>					
+				</div>
+				`;		
+			}		
+	}
+	
+	if (from==3) {
+		url_scheda_s=resource_file
+		html=`
+			<a href='`+url_scheda_s+`' target='_blank'>
+				<button type="button" class="btn btn-success" >Apri Scheda sicurezza</button>
+			</a>`
+
+			
+			if (sign_qa.length==0) {
+				html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e URL scheda sicurezza</button>
+				
+				
+				<div id='div_remove' class='form-group mt-3'  style='display:none'>
+					<label for="motivazione_elimina_sceda_s">Motivazione elimina scheda sicurezza e firma*</label>
+					<textarea class="form-control" id="motivazione_elimina_sceda_s"  name="motivazione_elimina_sceda_s" rows="3"></textarea>
+					<input type='hidden' name='id_remove_scheda_s' id='id_remove_scheda_s' value='`+id_pns+`'>
+					
+					<button type="submit" onclick='remove_sign_scheda_s()' class="btn btn-primary mt-2" name='btn_remove_scheda_s' value='remove'>Conferma operazione di rimozione firma e URL scheda sicurezza</button>					
+				</div>
+				
+				`;	
+			}		
+	}	
+	
+	if (from==4) {
+		url_cert=resource_file
+		html=`
+			<a href='`+url_cert+`' target='_blank'>
+				<button type="button" class="btn btn-success" >Apri Certificato</button>
+			</a>`
+
+		if (sign_qa.length==0) {
+			html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e URL Certificato</button>
+			
+			
+			<div id='div_remove' class='form-group mt-3'  style='display:none'>
+				<label for="motivazione_elimina_cert">Motivazione elimina Certificato e firma*</label>
+				<textarea class="form-control" id="motivazione_elimina_cert"  name="motivazione_elimina_cert" rows="3"></textarea>
+				<input type='hidden' name='id_remove_cert' id='id_remove_cert' value='`+id_pns+`'>
+				
+				<button type="submit" onclick='remove_sign_cert()' class="btn btn-primary mt-2" name='btn_remove_cert' value='remove'>Conferma operazione di rimozione firma e URL Certificato</button>					
 			</div>
 			
-		`;			
-	}
+			`;
+		}			
+	}	
 	$("#bodyvalue").html(html)		
 	
 }
 
 function ins_doc() {
 	
-	//dati etichetta
+	
+	id_pns=0;from=0;resource_file="";sign_qa=""
 	if( typeof ins_doc.from != 'undefined' ) from=ins_doc.from
 	if( typeof ins_doc.id_pns != 'undefined' ) id_pns=ins_doc.id_pns
 	if( typeof ins_doc.resource_file != 'undefined' ) 
 		resource_file=ins_doc.resource_file
-	//
+	if( typeof ins_doc.sign_qa != 'undefined' ) 
+			sign_qa=ins_doc.sign_qa	
 	
 
 	title_doc="Definizione etichetta";
@@ -243,7 +300,7 @@ function ins_doc() {
 			
 					<div class="col-md-4">
 						<label for="data_scheda_t">Data Scheda tecnica</label>
-						<input type="date" class="form-control" id="data_scheda_t" name="data_scheda_t" aria-describedby="Data etichetta" required>
+						<input type="date" class="form-control" id="data_scheda_t" name="data_scheda_t"  required>
 					</div>
 				</div>
 			</div>
@@ -257,6 +314,59 @@ function ins_doc() {
 		$('#modalvalue').modal('show')		
 	}
 	
+	if (from=="3") {
+		html=`
+			<input type='hidden' name='id_pns_scheda_s' value='`+id_pns+`'>
+			<div class='form-group '>
+				<div class="row mt-2">
+					<div class="col-md-8">
+						<label for="url_scheda_s">URL scheda sicurezza*</label>
+						<input type='text' class="form-control" id="url_scheda_s"  name="url_scheda_s" placeholder='Example: https://www.liofilchemstore.it/...' required>
+					</div>
+
+			
+					<div class="col-md-4">
+						<label for="data_scheda_s">Data Scheda sicurezza</label>
+						<input type="date" class="form-control" id="data_scheda_s" name="data_scheda_s"  required>
+					</div>
+				</div>
+			</div>
+		`;
+		
+		$("#bodyvalue").html(html)
+		html=`
+			<button type="submit" class="btn btn-success"   id='btn_sign' name='btn_sign' value='sign_scheda_s'>Firma</button>
+		`;
+		$("#div_save").html(html)		
+		$('#modalvalue').modal('show')		
+	}	
+	
+	if (from=="4") {
+		html=`
+			<input type='hidden' name='id_pns_cert' value='`+id_pns+`'>
+			<div class='form-group '>
+				<div class="row mt-2">
+					<div class="col-md-8">
+						<label for="url_cert">URL certificato*</label>
+						<input type='text' class="form-control" id="url_cert"  name="url_cert" placeholder='Example: https://www.liofilchemstore.it/...' required>
+					</div>
+
+			
+					<div class="col-md-4">
+						<label for="data_cert">Data Certificato</label>
+						<input type="date" class="form-control" id="data_cert" name="data_cert"  required>
+					</div>
+				</div>
+			</div>
+		`;
+		
+		$("#bodyvalue").html(html)
+		html=`
+			<button type="submit" class="btn btn-success"   id='btn_sign' name='btn_sign' value='sign_cert'>Firma</button>
+		`;
+		$("#div_save").html(html)		
+		$('#modalvalue').modal('show')		
+	}	
 
 	
 }
@@ -272,6 +382,22 @@ function remove_sign_etic() {
 function remove_sign_scheda_t() {
 	motivazione_elimina_sceda_t=$("#motivazione_elimina_sceda_t").val()
 	if (motivazione_elimina_sceda_t.length==0) {
+		event.preventDefault()
+		alert("Definire correttamente una motivazione!")
+	}
+}
+
+function remove_sign_scheda_s() {
+	motivazione_elimina_sceda_s=$("#motivazione_elimina_sceda_s").val()
+	if (motivazione_elimina_sceda_s.length==0) {
+		event.preventDefault()
+		alert("Definire correttamente una motivazione!")
+	}
+}
+
+function remove_sign_cert() {
+	motivazione_elimina_cert=$("#motivazione_elimina_cert").val()
+	if (motivazione_elimina_cert.length==0) {
 		event.preventDefault()
 		alert("Definire correttamente una motivazione!")
 	}

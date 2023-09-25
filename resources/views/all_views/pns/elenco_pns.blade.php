@@ -261,6 +261,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.073"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.087"></script>
 
 @endsection

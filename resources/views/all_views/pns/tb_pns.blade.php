@@ -99,8 +99,16 @@
 			$colo_stato_sic="danger";
 			$colo_stato_cert="danger";
 
-			if ($pns->sign_etichetta!=null) $colo_stato_etic="success";
-			if ($pns->sign_scheda_t!=null) $colo_stato_tec="success";
+			$etic_status=0;
+			if ($pns->sign_etichetta!=null) {
+				$etic_status=1;
+				$colo_stato_etic="success";
+			}	
+			$scheda_t_status=0;
+			if ($pns->sign_scheda_t!=null) {
+				$scheda_t_status=1;
+				$colo_stato_tec="success";
+			}	
 			if ($pns->sign_scheda_s!=null) $colo_stato_sic="success";
 			if ($pns->sign_cert!=null) $colo_stato_cert="success";
 			
@@ -108,17 +116,38 @@
 			$view_doc="display:none";
 		?>	
 			@if ($pns->dele=="0") 
-				<a href="javascript:void(0)">
-					<button type="button" class="btn btn-{{$colo_stato_etic}}"  {{$stato_sign}}><i class="fas fa-tag fa-xs" title="Etichetta"></i></button>
+				<?php
+					if ($etic_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=1;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.resource_file='".$pns->file_etic."';";
+					if ($etic_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>
+				<a href="javascript:void(0)" >
+					<button type="button" class="btn btn-{{$colo_stato_etic}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-tag fa-xs" title="Etichetta"></i></button>
 				</a>
 				<span class='firme' style='display:none'>
 				<?php
 					$view_sign=view_sign($arr_utenti,$pns,"sign_etichetta");
 					echo $view_sign;
 				?>
-				</span>				
+				</span>	
+
+				<?php
+					if ($scheda_t_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=2;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.resource_file='".$pns->url_scheda_t."';";
+					if ($scheda_t_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>
 				<a href="javasript:void(0)" >
-					<button type="button" class="btn btn-{{$colo_stato_tec}}" {{$stato_sign}}><i class="fas fa-file-invoice fa-xs" title="Scheda tecnica"></i></button>
+					<button type="button" class="btn btn-{{$colo_stato_tec}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-file-invoice fa-xs" title="Scheda tecnica"></i></button>
 				</a>
 				<span class='firme' style='display:none'>
 				<?php
@@ -149,13 +178,16 @@
 				</span>				
 				
 				<a href="" style='{{$view_doc}}' >
-					<button type="button" class="btn btn-success" alt='Fattibilità tecnica' {{$stato_sign}}><i class="fas fa-file-alt fa-xs" title="Documenti"></i></button>
+					<button type="button" class="btn btn-success" alt='Fattibilità tecnica' {{$stato_sign}} title="Documenti"><i class="fas fa-file-alt fa-xs"></i></button>
 				</a>
 				
-				
+				<a href='#' onclick="log_event({{$pns->id}})">
+					<button type="submit" class="btn btn-secondary" title="Log eventi">
+					<i class="fas fa-search fa-xs"></i></button>	
+				</a>				
 
 				<a href='#' onclick="dele_element({{$pns->id}})">
-					<button type="button" name='dele_ele' class="btn btn-secondary">
+					<button type="button" name='dele_ele' class="btn btn-secondary" title="Elimina PNS">
 					<i class="fas fa-trash fa-xs"></i></button>	
 				</a>
 			@endif

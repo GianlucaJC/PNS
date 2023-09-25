@@ -173,6 +173,15 @@ public function __construct()
 			$db->sign_recensione=$id_user;
 			$db->data_recensione=$dx;
 			$db->save();
+			
+		
+			$log_event=new log_event;
+			$log_event->id_pns=$id;
+			$log_event->user=$id_user;
+			$log_event->operazione="INSERT";
+			$log_event->modulo="recensione_pns";
+			$log_event->dettaglio="SIGN Recensione";
+			$log_event->save();				
 		}
 		$btn_sign_qa=$request->input("btn_sign_qa");
 		if ($btn_sign_qa=="sign") {
@@ -183,6 +192,14 @@ public function __construct()
 			$db->sign_qa=$id_user;
 			$db->data_qa=$dx;
 			$db->save();
+			
+			$log_event=new log_event;
+			$log_event->id_pns=$id;
+			$log_event->user=$id_user;
+			$log_event->operazione="INSERT";
+			$log_event->modulo="recensione_pns";
+			$log_event->dettaglio="SIGN QA";
+			$log_event->save();				
 		}
 	
 		$recensione=prodotti::where('id', $id)->get();
@@ -220,7 +237,14 @@ public function __construct()
 		}
 	
 		$view_dele=$request->input("view_dele");
-		
+		$cur_page=$request->input("cur_page");
+
+		$log_id=$request->input("log_id");
+		$view_log=array();
+		if (strlen($log_id)!=0) {
+			$view_log=log_event::where('id_pns', "=",$log_id)->get();
+		}
+
 		$dele_contr=$request->input("dele_contr");
 		$restore_contr=$request->input("restore_contr");
 		$id_user=Auth::user()->id;
@@ -251,13 +275,86 @@ public function __construct()
 		if (strlen($view_dele)==0) $view_dele=0;
 		if ($view_dele=="on") $view_dele=1;
 		
+		$btn_sign=$request->input("btn_sign");
+		if ($btn_sign=="sign_etic") {
+			$id_pns_etic=$request->input("id_pns_etic");
+			$filename_etic=$request->input("filename_etic");
+
+			prodotti::where('id', $id_pns_etic)
+			  ->update(['sign_etichetta' => $id_user,'data_etichetta'=>$request->input("data_etic"),'file_etic'=>$filename_etic]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_etic;
+			 $log_event->operazione="Sign Etichetta";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data etichetta: ".$request->input("data_etic");
+			 $log_event->save();				  
+		}
+		if ($btn_sign=="sign_scheda_t") {
+			$url_scheda_t=$request->input("url_scheda_t");
+			if (!preg_match("~^(?:f|ht)tps?://~i", $url_scheda_t)) {
+				$url_scheda_t = "http://" . $url_scheda_t;
+			}
+			
+			$data_scheda_t=$request->input("data_scheda_t");
+			$id_pns_scheda_t=$request->input("id_pns_scheda_t");
+
+			prodotti::where('id', $id_pns_scheda_t)
+			  ->update(['sign_scheda_t' => $id_user,'url_scheda_t'=>$url_scheda_t,'data_scheda_t'=>$data_scheda_t]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_scheda_t;
+			 $log_event->operazione="Sign Scheda Tecnica";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data scheda tecnica: ";
+			 $log_event->save();			
+		}
+		
+		
+		
+		$btn_remove_etic=$request->input("btn_remove_etic");
+		if ($btn_remove_etic=="remove") {
+			$id_remove_etic=$request->input("id_remove_etic");
+			prodotti::where('id', $id_remove_etic)
+			  ->update(['sign_etichetta' =>null,'data_etichetta'=>null,'file_etic'=>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_etic;
+			 $log_event->operazione="Remove Sign Etichetta";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_etic");
+			 $log_event->save();				  
+		}	
+
+		$btn_remove_scheda_t=$request->input("btn_remove_scheda_t");
+		if ($btn_remove_scheda_t=="remove") {
+			$id_remove_scheda_t=$request->input("id_remove_scheda_t");
+			prodotti::where('id', $id_remove_scheda_t)
+			  ->update(['sign_scheda_t' =>null,'data_scheda_t'=>null,'url_scheda_t'=>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_scheda_t;
+			 $log_event->operazione="Remove Sign Scheda tecnica";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_sceda_t");
+			 $log_event->save();				  
+		}
+
+
+		
+		
+		
 		$elenco_pns=DB::table('prodotti')
 		->when($view_dele=="0", function ($elenco_pns) {
 			return $elenco_pns->where('dele', "=","0");
 		})
 		->orderBy('id','desc')->get();
 
-		return view('all_views/pns/elenco_pns')->with("view_dele",$view_dele)->with("elenco_pns",$elenco_pns)->with('arr_utenti',$arr_utenti);
+		return view('all_views/pns/elenco_pns')->with("view_dele",$view_dele)->with("elenco_pns",$elenco_pns)->with('arr_utenti',$arr_utenti)->with('view_log',$view_log)->with('cur_page',$cur_page);
 
 	}		
 		

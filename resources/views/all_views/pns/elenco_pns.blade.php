@@ -6,6 +6,11 @@
 
 <link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css" rel="stylesheet">
 <!-- -->
+
+ <!-- per upload -->
+  <link href="{{ URL::asset('/') }}dist/css/upload/jquery.dm-uploader.min.css" rel="stylesheet">
+  <!-- per upload -->  
+  <link href="{{ URL::asset('/') }}dist/css/upload/styles.css?ver=1.1" rel="stylesheet">  
 @endsection
 
 
@@ -46,65 +51,133 @@
 
 		<form method='post' action="{{ route('elenco_pns') }}" id='frm_pns' name='frm_pns' autocomplete="off">
 			<input name="_token" type="hidden" value="{{ csrf_token() }}" id='token_csrf'>
+			<input type="hidden" value="{{url('/')}}" id="url" name="url">
 
-
-			
-        <div class="row">
+		<?php
+			$vtab="display:block";
+			$vlog="display:none";
+			if (count($view_log)!=0) {
+				$vtab="display:none";
+				$vlog="display:block";
+			}
+		?>
+        <div id='vlog' class="row" style="{{$vlog}}">
 			<div class="col-md-12">
-				<div class="alert alert-warning" role="alert" id='div_alert' style='display:none'>
-					
-				</div>
-			</div>
-			<div class="p-2">
-				<p class="btn btn-outline-primary float-right" onclick="$('.firme').toggle(200)">
-					Visualizza/Nascondi Firme
-				</p>
-			</div>
-
-			<div class="col-md-12">
-				
-				<table id='tbl_pns' class="display">
+				<table id='tbl_log' class="display">
 					<thead>
 						<tr>
-							<th style='width:40px'>Edit/View</th>
-							<th style='width:40px'>Status</th>
-							<th style='width:70px'>Codice</th>
-							<th>Descrizione</th>
-							<th style='width:120px'>Data creazione</th>
-							<th style='width:70px'>IVD</th>
-							<th>Operazioni</th>
+							<th style='width:40px'>ID</th>
+							<th>User</th>
+							<th>Operazione</th>
+							<th>Modulo</th>
+							<th>Dettaglio</th>
+							<th>Data operazione</th>
 						</tr>
 					</thead>
 					<tbody>
-						@include("all_views.pns.tb_pns")
+						@foreach($view_log as $log)
+							<tr>
+								<td style='width:40px'>
+									{{$log->id}}
+									
+								</td>
+								<td>
+									{{$log->user}} 
+								</td>
+								<td>
+									{{$log->operazione}} 
+								</td>
+								<td>
+									{{$log->modulo}} 
+								</td>
+								<td>
+									{{$log->dettaglio}} 
+								</td>
+								<td>
+									{{$log->created_at}} 
+								</td>
+							</tr>
+						@endforeach
 					</tbody>
 					<tfoot>
 						<tr>
-							<th style='width:40px'></th>
-							<th style='width:40px'>status</th>
-							<th style='width:70px'>Codice</th>
-							<th>Descrizione</th>
-							<th style='width:120px'>Data creazione</th>
-							<th style='width:70px'>IVD</th>
-							<th></th>
+							<th style='width:40px'>ID</th>
+							<th>User</th>
+							<th>Operazione</th>
+							<th>Modulo</th>
+							<th>Dettaglio</th>
+							<th>Data operazione</th>
 						</tr>
 					</tfoot>					
-				</table>
-				<input type='hidden' id='dele_contr' name='dele_contr'>
-				<input type='hidden' id='restore_contr' name='restore_contr'>
-			
-          </div>
+				</table>					
 
-        </div>
-		<?php
-		
-			$check="";
-			if ($view_dele=="1") $check="checked";
-		?>
-		
+			</div>
+			
+			
+			<button type="submit" class="btn btn-primary">Chiudi LOG</button>
+			
+		</div>	
+			
+			
+		<input type="hidden" name="cur_page" id="cur_page" value="{{$cur_page ?? 0}}">	
+		<div id='vtab' style='{{$vtab}}'>	
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-warning" role="alert" id='div_alert' style='display:none'>
+						
+					</div>
+				</div>
+				<div class="p-2">
+					<p class="btn btn-outline-primary float-right" onclick="$('.firme').toggle(200)">
+						Visualizza/Nascondi Firme
+					</p>
+				</div>
+
+				<div class="col-md-12">
+					
+					<table id='tbl_pns' class="display">
+						<thead>
+							<tr>
+								<th style='width:40px'>Edit/View</th>
+								<th style='width:40px'>Status</th>
+								<th style='width:70px'>Codice</th>
+								<th>Descrizione</th>
+								<th style='width:120px'>Data creazione</th>
+								<th style='width:70px'>IVD</th>
+								<th>Operazioni</th>
+							</tr>
+						</thead>
+						<tbody>
+							@include("all_views.pns.tb_pns")
+						</tbody>
+						<tfoot>
+							<tr>
+								<th style='width:40px'></th>
+								<th style='width:40px'>status</th>
+								<th style='width:70px'>Codice</th>
+								<th>Descrizione</th>
+								<th style='width:120px'>Data creazione</th>
+								<th style='width:70px'>IVD</th>
+								<th></th>
+							</tr>
+						</tfoot>					
+					</table>
+					<input type='hidden' id='dele_contr' name='dele_contr'>
+					<input type='hidden' id='restore_contr' name='restore_contr'>
+					<input type='hidden' id='log_id' name='log_id'>
+				
+			  </div>
+
+			</div>
+			<?php
+			
+				$check="";
+				if ($view_dele=="1") $check="checked";
+			?>
+			
 
 			<div class="row">
-			    <div class="col-lg-12">
+				<div class="col-lg-12">
 
 
 					<div class="form-check form-switch mt-3 ml-3">
@@ -114,10 +187,46 @@
 				
 				</div>
 			</div>	
+		</div>	
+			
+			
+	
+			<!-- Modal -->
+			
+			<div class="modal fade bd-example-modal-lg" id="modalvalue" tabindex="-1" role="dialog" aria-labelledby="title_doc" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="title_doc">Inserimento dati</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body" id='bodyvalue'>
+					...
+				  </div>
+				  <div id='div_wait' class='mb-3'></div>
+				  <div class="modal-footer">
+
+					
+					<div id='div_save'>
+					
+					</div>
+
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" id='btn_close'>Chiudi</button>
+					
+				  </div>
+				  
+				</div>
+			  </div>
+			</div>			
 		</form>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
+	
+		
+	
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -132,6 +241,10 @@
 	<!-- AdminLTE App -->
 	<script src="dist/js/adminlte.min.js"></script>
 
+	<!-- per upload -->
+	<script src="{{ URL::asset('/') }}dist/js/upload/jquery.dm-uploader.min.js"></script>
+	<script src="{{ URL::asset('/') }}dist/js/upload/demo-ui.js?ver=1.311"></script>
+	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.410"></script>	
 
 	
 	<!-- inclusione standard
@@ -148,6 +261,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.008"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.073"></script>
 
 @endsection

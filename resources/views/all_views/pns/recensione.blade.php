@@ -32,7 +32,7 @@
 			<h1 class="m-0">
 				<center>
 					<font color='red'>
-						RECENSIONE DEL PRODOTTO
+						SCHEDA DEL PRODOTTO
 					</font>
 				</center>
 				
@@ -137,25 +137,67 @@
 				if (isset($recensione[0]) && $recensione[0]->ivd=="IVD") {
 			?>
 			<div class="row mb-3">
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<label for="gspr_applicabili">GSPR applicabili</label>
 					<div class="form-floating mb-3">
 						 <textarea class="form-control" {{$dis}} id="gspr_applicabili" name="gspr_applicabili" style="height: 80%;" rows="3">{{$recensione[0]->gspr_applicabili ?? ''}}</textarea>
 					</div>
 				</div>	
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<label for="risk_management">Risk Management File applicabile</label>
 					<div class="form-floating mb-3">
 						 <textarea class="form-control" {{$dis}} id="risk_management" name="risk_management" style="height: 80%;" rows="3">{{$recensione[0]->risk_management ?? ''}}</textarea>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<label for="progetto_rd">Progetto R&D </label>
+
+				<div class="col-md-3">
+						<label for="progetto_rd_sn">Progetto R&D*</label>
+					
+						<select class="form-select form-select-lg" {{$dis}} name="progetto_rd_sn" id="progetto_rd_sn"  required onchange='select_prog(this.value)'>
+						<option value=''>Select...</option>
+							<option value="S"
+							@if (isset($recensione[0]->progetto_rd_sn) && $recensione[0]->progetto_rd_sn=="S") 	selected
+							@endif
+							>Sì</option>
+
+							<option value="N"
+							@if (isset($recensione[0]->progetto_rd_sn) && $recensione[0]->progetto_rd_sn=="N") 	selected
+							@endif
+							>No</option>				
+						</select>
+					
+				</div>
+
+				<?php
+				$disp_si="display:none";
+				if ($recensione[0]->progetto_rd) $disp_si="display:block";
+				?>
+				
+				<div class="col-md-3 progetto" id='div_prog_si' style="{{$disp_si}}">
+					<label for="progetto_rd">Progetto R&D - Motivazione SI</label>
 					<div class="form-floating mb-3">
 						 <textarea class="form-control" {{$dis}} id="progetto_rd" name="progetto_rd" style="height: 80%;" rows="3">{{$recensione[0]->progetto_rd ?? ''}}</textarea>
 					</div>
-				</div>				
+				</div>
+				
+
+				<?php
+				$disp_no="display:none";
+				if ($recensione[0]->progetto_rd_motivazione_no) $disp_no="display:block";
+				?>
+
+				<div class="col-md-3 progetto" id='div_prog_no' style="{{$disp_no}}">
+					<label for="progetto_rd_motivazione_no">Progetto R&D - Motivazione (rif. PQ 7.01)</label>
+					<div class="form-floating mb-3">
+						 <textarea class="form-control" {{$dis}} id="progetto_rd_motivazione_no" name="progetto_rd_motivazione_no" style="height: 80%;" rows="3">{{$recensione[0]->progetto_rd_motivazione_no ?? ''}}</textarea>
+					</div>
+				</div>
+
+
 			</div>
+			
+
+
 			<?php } 
 				if ($sign_recensione!=null && $sign_recensione>0)
 					echo "Firma recensione apposta da: <b>".$arr_utenti[$sign_recensione]['operatore']."</b><hr>";
@@ -169,7 +211,7 @@
 					<button type="submit" name='btn_sign_recensione' id='btn_sign_recensione' value="sign" class="btn btn-primary btn-lg btn ml-3">FIRMA sezione</button>
 					<hr>
 				@endif
-				@if ($sign_recensione!=null && $sign_qa==null && $sign_ready==true) 
+				@if ($sign_recensione!=null && $sign_qa==null &&  $sign_ready==true) 
 					<button type="submit" name='btn_sign_qa' id='btn_sign_qa' value="sign" class="btn btn-primary btn-lg btn-block">FIRMA QA</button>
 				@endif
 				<a href="{{ route('elenco_pns') }}">
@@ -232,7 +274,7 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js"></script>
 	<!-- fine DataTables !-->
-	<script src="{{ URL::asset('/') }}dist/js/recensione.js?ver=1.006"></script>
+	<script src="{{ URL::asset('/') }}dist/js/recensione.js?ver=1.010"></script>
 
 	
 @endsection 

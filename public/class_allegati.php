@@ -1,7 +1,8 @@
 <!-- ALLEGATI -->
-
+<?php
+	$operazione=$_POST['operazione'];
+?>
 <!-- ref https://github.com/danielm/uploader -->
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
 	<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
@@ -13,9 +14,37 @@
 	<path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
   </symbol>
 </svg>	
+
+<?php
+$disp="";
+if (isset($_POST['file_tec']) && $_POST['file_tec']=="1") {
+ $disp="display:none";
+ echo "<div id='div_file_doc'>";
+	$js="";
+	$js.="$('#div_send_allegati').show(120);$('#div_file_doc').hide();";
+	echo "<a href=".$_POST['url_file']." target='_blank'>";
+		echo "Dichiarazione di conformità UE";
+	echo "</a>";
+	echo "<span class='ml-3' id='span_lnk_doc'>";
+		echo "<a href='javascript:void(0)' onclick=\"$js\">";
+			echo "<i class='fas fa-trash-alt' style='color: #ff0000;'></i> Sostituisci file";
+		echo "</a>";
+	echo "</span>";	
+	
+ echo "</div>";
+}
+?>
+
 <div id="sez_allegati" style="" class="mt-2">
 	
-	<div id="div_send_allegati">
+	<div id="div_send_allegati" style="<?php echo $disp; ?>">
+		<?php if ($operazione=="tecnica") 
+			 echo "<h4>Allegare dichiarazione di conformità UE (pdf)</h4>";
+
+		?> 
+		
+		
+		
 		<div class="row mt-2">
 			<div class="col-md-6 col-sm-12">
 			  
@@ -61,6 +90,10 @@
 	</div>
 	<hr>
 
+	<?php
+
+
+	if ($operazione=="etic") {?>
 	 <div class="form-group">
 		<div class="row mt-2">
 			<div class="col-md-4">
@@ -72,10 +105,97 @@
 			</div>
 		</div>
 
-	</div>
+	 </div>
+	<?php } 
+
+	if ($operazione=="tecnica") {?>
+	 <div class="form-group">
+		<div class="row mt-2">
+
+			
+			<div class="col-md-8">
+				<label for="tecnica_file_note">Technical File (note)</label>
+				<textarea class="form-control" id="tecnica_file_note" name="tecnica_file_note" rows="1"></textarea>
+						
+			</div>
+
+
+			<div class="col-md-4">
+				<label for="tecnica_file_data">Data</label>
+				<input type="date" class="form-control" id="tecnica_file_data" name="tecnica_file_data" aria-describedby="Data etichetta">
+			</div>
+		</div>
+
+
+		<div class="row mt-2">
+
+			
+			<div class="col-md-8">
+				<label for="tecnica_repertorio">Registrazione sul sito ministero (numero repertorio)</label>
+				<input type='text' class="form-control" id="tecnica_repertorio"  name="tecnica_repertorio" placeholder='Numero repertorio'>
+			</div>
+					
+					
+			<div class="col-md-4">
+				<label for="tecnica_ministero_data">Data</label>
+				<input type="date" class="form-control" id="tecnica_ministero_data" name="tecnica_ministero_data">
+			</div>
+		</div>
+		
+		<div class="row mt-2">
+
+			
+			<div class="col-md-12">
+				<label for="tecnica_basic_udi">Basic UDI-DI</label>
+				<input type='text' class="form-control" id="tecnica_basic_udi"  name="tecnica_basic_udi" placeholder='Basic UDI-DI'>
+			</div>
+
+		</div>	
+
+
+		<div class="row mt-2">
+
+			
+			<div class="col-md-8">
+				<label for="tecnica_eudamed_note">Registrazione EUDAMED </label>
+				<input type='text' class="form-control" id="tecnica_eudamed_note"  name="tecnica_eudamed_note" placeholder='Numero repertorio'>
+			</div>
+					
+					
+			<div class="col-md-4">
+				<label for="tecnica_eudamed_data">Data</label>
+				<input type="date" class="form-control" id="tecnica_eudamed_data" name="tecnica_eudamed_data">
+			</div>
+		</div>		
+		
+
+	 </div>
+	<?php } ?>
+
 	
 	
 </div>
+
+
+<?php
+if (isset($_POST['sign_tecnica']) && strlen($_POST['sign_tecnica'])!=0) {
+	$js="";
+	$js.="if ($('#motivazione_elimina_tecnica').val().length==0) ";
+	$js.="   {alert('Definire la motivazione');event.preventDefault();}";
+?>	
+
+	<button onclick="$('#div_remove_tecnica').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma sezione tecnica</button>
+		
+		<div id='div_remove_tecnica' class='form-group mt-3'  style='display:none'>
+			<label for="motivazione_elimina_tecnica">Motivazione elimina firma*</label>
+			<textarea class="form-control" id="motivazione_elimina_tecnica"  name="motivazione_elimina_tecnica" rows="3"></textarea>
+			
+			<input type='hidden' name='id_remove_tecnica' id='id_remove_tecnica' value="<?php echo $_POST['id_pns']?>">
+			
+			<button type="submit" class="btn btn-primary mt-2" name='btn_remove_tecnica' onclick="<?php echo $js;?>" value='remove'>Conferma operazione di rimozione firma</button>					
+		</div>
+<?php } ?>
+
 
 
 <!-- File item template -->

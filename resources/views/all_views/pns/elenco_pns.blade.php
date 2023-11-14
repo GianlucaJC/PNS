@@ -138,9 +138,9 @@
 					<table id='tbl_pns' class="display">
 						<thead>
 							<tr>
+								<th style='width:70px'>Codice</th>
 								<th style='width:40px'>Edit/View</th>
 								<th style='width:40px'>Status</th>
-								<th style='width:70px'>Codice</th>
 								<th>Descrizione</th>
 								<th style='width:120px'>Data creazione</th>
 								<th style='width:70px'>IVD</th>
@@ -244,7 +244,7 @@
 	<!-- per upload -->
 	<script src="{{ URL::asset('/') }}dist/js/upload/jquery.dm-uploader.min.js"></script>
 	<script src="{{ URL::asset('/') }}dist/js/upload/demo-ui.js?ver=1.311"></script>
-	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.410"></script>	
+	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.412"></script>	
 
 	
 	<!-- inclusione standard
@@ -261,6 +261,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.087"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.138"></script>
 
 @endsection

@@ -19,7 +19,10 @@ function set_class_allegati() {
  
   base_path = $("#url").val();
   tipo_doc="";scadenza=""
-  extFilter= ["pdf","doc","docx","jpg","png","jpeg"]
+  if (from=="7")
+	extFilter= ["pdf"]
+  else
+	extFilter= ["pdf","doc","docx","jpg","png","jpeg"]
   
   
   $('#drag-and-drop-zone').dmUploader({ //

@@ -105,7 +105,10 @@ function view_doc() {
 	if (from=="2") title_doc="Definizione Scheda tecnica";
 	if (from=="3") title_doc="Definizione Scheda sicurezza";
 	if (from=="4") title_doc="Definizione Certificato";
-	if (from=="5") title_doc="Definizione Altri documenti";
+	if (from=="5") title_doc="Definizione UDI-DI";
+	if (from=="6") title_doc="Definizione Altri documenti";
+	//from==7 --il view_doc di fatto viene fatto da ins_doc
+	if (from=="100") title_doc="Altro";
 
 	$("#title_doc").html(title_doc)	
 	
@@ -215,6 +218,48 @@ function view_doc() {
 			`;
 		}			
 	}	
+	
+	if (from==5) {
+		udi_di=resource_file
+		html=`UDI-DI: <b>`+udi_di+`</b>`
+
+		if (sign_qa.length==0) {
+			html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma UDI-DI</button>
+			
+			
+			<div id='div_remove' class='form-group mt-3'  style='display:none'>
+				<label for="motivazione_elimina_udi">Motivazione elimina UDI-DI e firma*</label>
+				<textarea class="form-control" id="motivazione_elimina_udi"  name="motivazione_elimina_udi" rows="3"></textarea>
+				<input type='hidden' name='id_remove_udi' id='id_remove_udi' value='`+id_pns+`'>
+				
+				<button type="submit" onclick='remove_sign_udi()' class="btn btn-primary mt-2" name='btn_remove_udi' value='remove'>Conferma operazione di rimozione firma UDI-DI</button>					
+			</div>
+			
+			`;
+		}			
+	}
+	
+	if (from==6) {
+		altri_doc=resource_file
+		html=`Altri DOC:<hr><b>`+altri_doc+`</b>`
+
+		if (sign_qa.length==0) {
+			html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma Altri documenti</button>
+			
+			
+			<div id='div_remove' class='form-group mt-3'  style='display:none'>
+				<label for="motivazione_elimina_altridoc">Motivazione elimina Altri Documenti e firma*</label>
+				<textarea class="form-control" id="motivazione_elimina_altridoc"  name="motivazione_elimina_altridoc" rows="3"></textarea>
+				<input type='hidden' name='id_remove_altridoc' id='id_remove_altridoc' value='`+id_pns+`'>
+				
+				<button type="submit" onclick='remove_sign_altridoc()' class="btn btn-primary mt-2" name='btn_remove_altridoc' value='remove'>Conferma operazione di rimozione altri documenti</button>					
+			</div>
+			
+			`;
+		}			
+	}	
+
+	
 	$("#bodyvalue").html(html)		
 	
 }
@@ -236,20 +281,29 @@ function ins_doc() {
 	if (from=="2") title_doc="Definizione Scheda tecnica";
 	if (from=="3") title_doc="Definizione Scheda sicurezza";
 	if (from=="4") title_doc="Definizione Certificato";
-	if (from=="5") title_doc="Definizione Altri documenti";
+	if (from=="5") title_doc="Definizione UDI-DI";
+	if (from=="6") title_doc="Definizione Altri documenti";
+	if (from=="7") title_doc="Definizione Documentazione tecnica";
+	if (from=="100") title_doc="Altro";
+	
 
 	$("#title_doc").html(title_doc)
 	
+	$("#div_save").html('')
 	
-	$("#btn_sign").show();
 	if (from=="1") {
 		html=`<button type="submit" class="btn btn-outline-success"  onclick='sign_etic()' id='btn_sign' name='btn_sign' value='sign_etic' disabled>Firma</button>`
 		$("#div_save").html(html)
 	}
  
+	file_tec=$("#info_tecnica"+id_pns).data("file_tec");
+	url_file=$("#info_tecnica"+id_pns).data("url_file");
+	sign_tecnica=$("#info_tecnica"+id_pns).data("sign_tecnica");
 
-	if (from=="1") {
-		
+	if (from=="1" || from=="7") {
+		operazione=""
+		if (from=="1") operazione="etic";
+		if (from=="7") operazione="tecnica";
 		html=""
 		html+="<center><div class='spinner-border text-secondary' role='status'></div></center>";
 
@@ -263,7 +317,7 @@ function ins_doc() {
 			headers: {
 			  "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
 			},
-			body: 'operazione=refresh_tipo'
+			body: 'operazione='+operazione+'&id_pns='+id_pns+'&file_tec='+file_tec+'&url_file='+url_file+'&sign_tecnica='+sign_tecnica
 		})
 		.then(response => {
 			if (response.ok) {
@@ -279,7 +333,30 @@ function ins_doc() {
 			set_class_allegati.id_pns=id_pns
 			
 
-			set_class_allegati(); 
+			set_class_allegati();
+			if (from==7) {
+				//popolamento dati da span tramite prop data
+				$("#tecnica_file_note").val($("#info_tecnica"+id_pns).data("tecnica_file_note"))
+				$("#tecnica_file_data").val($("#info_tecnica"+id_pns).data("tecnica_file_data"))
+				$("#tecnica_repertorio").val($("#info_tecnica"+id_pns).data("tecnica_repertorio"))
+				$("#tecnica_ministero_data").val($("#info_tecnica"+id_pns).data("tecnica_ministero_data"))
+				$("#tecnica_basic_udi").val($("#info_tecnica"+id_pns).data("tecnica_basic_udi"))
+				$("#tecnica_eudamed_note").val($("#info_tecnica"+id_pns).data("tecnica_eudamed_note"))
+				$("#tecnica_eudamed_data").val($("#info_tecnica"+id_pns).data("tecnica_eudamed_data"))				
+			}
+			
+			if (sign_tecnica) {
+				/*
+					disabilito la sezione documentazione tecnica perchè
+					è stata già apposta la firma
+				*/
+				
+				$("#sez_allegati :input").prop("disabled", true);
+				$("#span_lnk_doc").hide();
+				
+				
+			}
+
 		})
 		.catch(status, err => {
 			
@@ -368,7 +445,67 @@ function ins_doc() {
 		$('#modalvalue').modal('show')		
 	}	
 
+
+	if (from=="5") {
+		html=`
+			<input type='hidden' name='id_pns_udi' value='`+id_pns+`'>
+			<div class='form-group '>
+				<div class="row mt-2">
+					<div class="col-md-8">
+						<label for="udi_di">UDI-DI*</label>
+						<input type='text' class="form-control" id="udi_di"  name="udi_di" placeholder='UDI-DI' required>
+					</div>
+
+				</div>
+			</div>
+		`;
+		
+		$("#bodyvalue").html(html)
+		html=`
+			<button type="submit" class="btn btn-success"   id='btn_sign' name='btn_sign' value='sign_udi'>Firma</button>
+		`;
+		$("#div_save").html(html)		
+		$('#modalvalue').modal('show')		
+	}
+
+	if (from=="6") {
+		html=`
+			<input type='hidden' name='id_pns_altridoc' value='`+id_pns+`'>
+			<div class='form-group '>
+				<div class="row mt-2">
+					<div class="col-md-12">
+						<label for="altri_doc">Altri documenti</label>
+						<textarea class="form-control" id="altri_doc" name="altri_doc" rows="3"></textarea>
+								
+					</div>
+
+				</div>
+			</div>
+		`;
+		
+		$("#bodyvalue").html(html)
+		html=`
+			<button type="submit" class="btn btn-success"   id='btn_sign' name='btn_sign' value='sign_altridoc'>Firma</button>
+		`;
+		$("#div_save").html(html)		
+		$('#modalvalue').modal('show')		
+	}
 	
+	if (from==7) {
+		html=""
+		html+=`<input type='hidden' name='id_pns_tecnica' id='id_pns_tecnica' value='`+id_pns+`'>`;
+		if (!sign_tecnica) {
+			if ($("#info_tecnica"+id_pns).data("doc_tecnica")==1) {
+				html+=`<button type="submit" class="btn btn-success mr-2"  id='btn_sign' name='btn_sign' value='sign_tecnica' >Firma</button>`
+			}
+			html+=`<button type="submit" class="btn btn-success"   id='btn_save_tec' name='btn_save_tec' value='save'>Salva</button>`
+		}
+
+		
+		$("#div_save").html(html)
+	} 
+
+ 
 }
 
 function remove_sign_etic() {
@@ -402,6 +539,25 @@ function remove_sign_cert() {
 		alert("Definire correttamente una motivazione!")
 	}
 }
+
+function remove_sign_udi() {
+	motivazione_elimina_udi=$("#motivazione_elimina_udi").val()
+	if (motivazione_elimina_udi.length==0) {
+		event.preventDefault()
+		alert("Definire correttamente una motivazione!")
+	}
+}
+
+
+function remove_sign_altridoc() {
+	motivazione_elimina_altridoc=$("#motivazione_elimina_altridoc").val()
+	if (motivazione_elimina_altridoc.length==0) {
+		event.preventDefault()
+		alert("Definire correttamente una motivazione!")
+	}
+}
+
+
 
 function log_event(value) {
 	$("#log_id").val(value)

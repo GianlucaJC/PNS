@@ -7,9 +7,29 @@
 		if ($pns->sign_scheda_s!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_cert!=null) {$colo_status="warning";$sign_ready++;}
 		
+		//check documentazione tecnica pronta per la firma
+		$doc_tecnica="0";$file_tec=1;
+		if ($pns->tecnica_file_note!=null &&
+			$pns->tecnica_file_data &&
+			$pns->tecnica_repertorio &&
+			$pns->tecnica_ministero_data &&
+			$pns->tecnica_basic_udi &&
+			$pns->tecnica_eudamed_note &&
+			$pns->tecnica_eudamed_data)	{
+			$doc_tecnica="1";
+		}
+		$url_file="";
+		if (!file_exists("allegati/".$pns->id."/doc_tecnici/".$pns->id.".pdf")) {
+			$file_tec=0;
+			$doc_tecnica=0;
+		} else 
+			$url_file="allegati/".$pns->id."/doc_tecnici/".$pns->id.".pdf";
+		
+		$sign_tecnica=$pns->sign_tecnica;
+
 
 		if ($colo_status=="warning") $status_text="InRev";
-		if ($sign_ready==4) {
+		if ($sign_ready==4 || ($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1)) {
 			$status_text="ReadySign";
 			$colo_status="warning";
 		}
@@ -17,19 +37,36 @@
 		if ($pns->sign_qa!=null) {
 			$colo_status="success";$status_text="Close";
 		}		
+		
+		
+		
 	?>
 	<tr>
+
+		<td style='width:40px'>
+		 @if ($pns->dele=="1") 
+			<font color='red'><del> 
+		 @endif
+			<span id='id_descr{{$pns->id}}' data-codice='{{ $pns->codice }}'>
+				{{ $pns->codice }}
+			</span>	
+		 @if ($pns->dele=="1") 
+			 </del></font>
+				<hr>
+				<small><i>{{ $pns->motivazione_dele }}</i></small>								 
+		 @endif	
+		</td>	
 		<td style='width:70px;text-align:center'>
 			@if ($pns->dele=="0")
 				@if ($pns->sign_recensione==null)
 				<a href="{{route('recensione',['id'=>$pns->id])}}" >
 					<button type="button" class="btn btn-primary" alt='Completa scheda'><i class="fas fa-edit fa-xs" title="Completa scheda"></i></button>
 				</a>									
-				@elseif($pns->sign_qa==null && $sign_ready!=4)
+				@elseif($pns->sign_qa==null && $sign_ready!=4 && $pns->progetto_rd_sn!="S")
 				<a href="{{route('recensione',['id'=>$pns->id])}}" >
 					<button type="button" class="btn btn-info" alt='Visualizza scheda'><i class="fas fa-info-circle fa-xs" title="Visualizza scheda"></i></button>
 				</a>									
-				@elseif($sign_ready==4 && $pns->sign_qa==null)
+				@elseif(($sign_ready==4 || (($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1)) )&& $pns->sign_qa==null)
 					<a href="{{route('recensione',['id'=>$pns->id])}}" >
 						<button type="button" class="btn btn-primary" alt='SignQA'><i class="fas fa-signature fa-xs" title="SignQA"></i></button>
 					</a>
@@ -41,6 +78,7 @@
 			@endif
 
 		</td>
+
 
 		<td style='text-align:center;width:40px'>
 			<button style='width:80px' type="button" class="btn btn-{{$colo_status}} btn-sm">{{$status_text}}</button>
@@ -59,19 +97,7 @@
 			</span>
 		</td>
 		
-		<td style='width:40px'>
-		 @if ($pns->dele=="1") 
-			<font color='red'><del> 
-		 @endif
-			<span id='id_descr{{$pns->id}}' data-codice='{{ $pns->codice }}'>
-				{{ $pns->codice }}
-			</span>	
-		 @if ($pns->dele=="1") 
-			 </del></font>
-				<hr>
-				<small><i>{{ $pns->motivazione_dele }}</i></small>								 
-		 @endif	
-		</td>
+
 
 		<td>
 			<i>{{ $pns->descrizione }}</i>
@@ -98,6 +124,9 @@
 			$colo_stato_tec="danger";
 			$colo_stato_sic="danger";
 			$colo_stato_cert="danger";
+			$colo_stato_udi="danger";
+			$colo_stato_altro="danger";
+			$colo_stato_tecnica="danger";
 
 			$etic_status=0;
 			if ($pns->sign_etichetta!=null) {
@@ -119,8 +148,32 @@
 				$cert_status=1;
 				$colo_stato_cert="success";
 			}				
+			$udi_status=0;
+			if ($pns->sign_udi!=null) {
+				$udi_status=1;
+				$colo_stato_udi="success";
+			}
+			$altro_status=0;
+			if ($pns->sign_altro!=null) {
+				$altro_status=1;
+				$colo_stato_altro="success";
+			}
+
+			$tecnica_status=0;
+			if ($pns->sign_tecnica!=null) {
+				$tecnica_status=1;
+				$colo_stato_tecnica="success";
+			}
+
 
 			
+			if ($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1) {
+				$colo_stato_etic="success";
+				$colo_stato_tec="success";
+				$colo_stato_sic="success";
+				$colo_stato_cert="success";
+				$stato_sign="disabled";
+			}				
 			
 			$view_doc="display:none";
 		?>	
@@ -136,8 +189,8 @@
 					if ($etic_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
 				?>
-				<a href="javascript:void(0)" >
-					<button type="button" class="btn btn-{{$colo_stato_etic}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-tag fa-xs" title="Etichetta"></i></button>
+				<a href="javascript:void(0)" title="Etichetta">
+					<button type="button" class="btn btn-{{$colo_stato_etic}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-tag fa-xs" ></i></button>
 				</a>
 				<span class='firme' style='display:none'>
 				<?php
@@ -157,8 +210,8 @@
 					if ($scheda_t_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
 				?>
-				<a href="javasript:void(0)" >
-					<button type="button" class="btn btn-{{$colo_stato_tec}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-file-invoice fa-xs" title="Scheda tecnica"></i></button>
+				<a href="javasript:void(0)"  title="Scheda tecnica">
+					<button type="button" class="btn btn-{{$colo_stato_tec}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-file-invoice fa-xs"></i></button>
 				</a>
 				<span class='firme' style='display:none'>
 				<?php
@@ -178,9 +231,9 @@
 					if ($scheda_s_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
 				?>				
-				<a href="javasript:void(0)" >
+				<a href="javasript:void(0)" title="Scheda sicurezza">
 					<button type="button" class="btn btn-{{$colo_stato_sic}}" onclick="{{$js}}" {{$stato_sign}}>
-					<i class="fas fa-shield-alt fa-xs" title="Scheda sicurezza"></i></button>
+					<i class="fas fa-shield-alt fa-xs" ></i></button>
 				</a>
 				<span class='firme' style='display:none'>
 				<?php
@@ -199,9 +252,9 @@
 					if ($cert_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
 				?>		
-				<a href="javasript:void(0)" >
+				<a href="javasript:void(0)"  title="Certificato">
 					<button type="button" class="btn btn-{{$colo_stato_cert}}"  onclick="{{$js}}" {{$stato_sign}}>
-					<i class="fas fa-check-square fa-xs" title="Certificato"></i></button>
+					<i class="fas fa-check-square fa-xs"></i></button>
 				</a>										
 				<span class='firme' style='display:none'>
 				<?php
@@ -210,9 +263,90 @@
 				?>				
 				</span>				
 				
-				<a href="" style='{{$view_doc}}' >
-					<button type="button" class="btn btn-success" alt='Fattibilità tecnica' {{$stato_sign}} title="Documenti"><i class="fas fa-file-alt fa-xs"></i></button>
+				
+				<?php
+					if ($udi_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=5;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
+					$js.="$proc.resource_file='".$pns->udi_di."';";
+					if ($udi_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>					
+				<a href="javascript:void(0)" title="UDI-DI">
+					<button type="button" class="btn btn-{{$colo_stato_udi}}" alt='UDI-DI'   onclick="{{$js}}" {{$stato_sign}}  ><i class="fas fa-file fa-xs"></i></button>
 				</a>
+				<span class='firme' style='display:none'>
+				<?php
+					$view_sign=view_sign($arr_utenti,$pns,"sign_udi");
+					echo $view_sign;
+				?>				
+				</span>
+
+				<?php
+					if ($altro_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=6;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
+					$js.="$proc.resource_file='".$pns->altri_doc."';";
+					if ($altro_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>					
+				<a href="javascript:void(0)" title="Altri documenti">
+					<button type="button" class="btn btn-{{$colo_stato_altro}}" alt='Altri documenti'   onclick="{{$js}}" {{$stato_sign}}  ><i class="fas fa-file-alt fa-xs"></i></button>
+				</a>
+				<span class='firme' style='display:none'>
+				<?php
+					$view_sign=view_sign($arr_utenti,$pns,"sign_altro");
+					echo $view_sign;
+				?>				
+				</span>
+				
+				@if ($pns->ivd=="IVD" || $pns->ivd=="RIVIVD")
+					<span id='info_tecnica{{$pns->id}}'
+					data-tecnica_file_note='{{ $pns->tecnica_file_note }}'
+					data-tecnica_file_data='{{ $pns->tecnica_file_data }}'
+					data-tecnica_repertorio='{{ $pns->tecnica_repertorio }}'
+					data-tecnica_ministero_data='{{ $pns->tecnica_ministero_data }}'
+					data-tecnica_basic_udi='{{ $pns->tecnica_basic_udi }}'
+					data-tecnica_eudamed_note='{{ $pns->tecnica_eudamed_note }}'
+					data-tecnica_eudamed_data='{{ $pns->tecnica_eudamed_data }}' 
+					data-doc_tecnica='{{ $doc_tecnica }}'
+					data-file_tec='{{ $file_tec }}'
+					data-url_file='{{ $url_file }}'
+					data-sign_tecnica='{{ $sign_tecnica }}'>
+					</span>
+
+					
+						<?php
+
+				
+						$proc="ins_doc";
+						//else $proc="view_doc";
+						$js="";					
+						$js.="$proc.from=7;";
+						$js.="$proc.id_pns=".$pns->id.";";
+						$js.="$proc.sign_qa='".$pns->sign_qa."';";
+						$js.="$proc.resource_file='".$pns->altri_doc."';";
+						$js.="ins_doc();";
+						//else $js.="view_doc();";
+					?>					
+					<a href="javascript:void(0)" title="Documentazione tecnica">
+						<button type="button" class="btn btn-{{$colo_stato_tecnica}}" alt='Documentazione tecnica' onclick="{{$js}}" {{$stato_sign}}  ><i class="fas fa-wrench fa-xs"></i></button>
+					</a>
+					<span class='firme' style='display:none'>
+					<?php
+						$view_sign=view_sign($arr_utenti,$pns,"sign_tecnica");
+						echo $view_sign;
+					?>				
+					</span>
+				@endif
+				
+				
 				
 				<a href='#' onclick="log_event({{$pns->id}})">
 					<button type="submit" class="btn btn-secondary" title="Log eventi">

@@ -61,6 +61,8 @@ public function __construct()
 			$procedi=false;
 			if ($pre=="0" || $pre=="1" || $pre=="2" || $pre=="3" || $pre=="4" || $pre=="5" || $pre=="6" || $pre=="7" || $pre=="8" || $pre=="9") $procedi=true;
 			
+			if (substr($codice,0,3)=="655") $procedi=false;
+				
 			if ($procedi==false) continue;
 			$descrizione=$data->DES_ART;
 			$temperatura_conservazione=$data->TEMPERATURA;
@@ -150,8 +152,13 @@ public function __construct()
 				$db->gspr_applicabili=$request->input("gspr_applicabili");
 			if ($request->has("risk_management"))
 				$db->risk_management=$request->input("risk_management");
+			
+			$db->progetto_rd_sn=$request->input("progetto_rd_sn");
 			if ($request->has("progetto_rd"))
 				$db->progetto_rd=$request->input("progetto_rd");
+			if ($request->has("progetto_rd_motivazione_no"))
+				$db->progetto_rd_motivazione_no=$request->input("progetto_rd_motivazione_no");
+
 			$db->save();
 			
 			
@@ -213,7 +220,7 @@ public function __construct()
 			if ($recensione[0]->sign_scheda_t!=null) $signr++;
 			if ($recensione[0]->sign_scheda_s!=null) $signr++;
 			if ($recensione[0]->sign_cert!=null) $signr++;
-			if ($signr==4) $sign_ready=true;
+			if ($signr==4  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
 		}
 
 
@@ -274,6 +281,17 @@ public function __construct()
 		}		
 		if (strlen($view_dele)==0) $view_dele=0;
 		if ($view_dele=="on") $view_dele=1;
+		
+		
+		$btn_save_tec=$request->input("btn_save_tec");
+		if ($btn_save_tec=="save") {
+			
+			$id_pns_tecnica=$request->input("id_pns_tecnica");
+
+			prodotti::where('id', $id_pns_tecnica)
+			  ->update(['tecnica_file_note' => $request->input("tecnica_file_note"),'tecnica_file_data'=>$request->input("tecnica_file_data"),'tecnica_repertorio'=>$request->input("tecnica_repertorio"),'tecnica_ministero_data'=>$request->input("tecnica_ministero_data"),'tecnica_basic_udi'=>$request->input("tecnica_basic_udi"),'tecnica_eudamed_note'=>$request->input("tecnica_eudamed_note"),'tecnica_eudamed_data'=>$request->input("tecnica_eudamed_data")]);
+			
+		}
 		
 		$btn_sign=$request->input("btn_sign");
 		if ($btn_sign=="sign_etic") {
@@ -354,6 +372,56 @@ public function __construct()
 			 $log_event->save();			
 		}		
 		
+		if ($btn_sign=="sign_udi") {
+			$udi_di=$request->input("udi_di");
+			$id_pns_udi=$request->input("id_pns_udi");
+
+			prodotti::where('id', $id_pns_udi)
+			  ->update(['sign_udi' => $id_user,'udi_di'=>$udi_di]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_udi;
+			 $log_event->operazione="Sign UDI-DI";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="--";
+			 $log_event->save();			
+		}		
+
+
+		if ($btn_sign=="sign_altridoc") {
+			$altri_doc=$request->input("altri_doc");
+			$id_pns_altridoc=$request->input("id_pns_altridoc");
+
+			prodotti::where('id', $id_pns_altridoc)
+			  ->update(['sign_altro' => $id_user,'altri_doc'=>$altri_doc]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_altridoc;
+			 $log_event->operazione="Sign Altri documenti";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="--";
+			 $log_event->save();			
+		}
+
+		if ($btn_sign=="sign_tecnica") {
+			$id_pns_tecnica=$request->input("id_pns_tecnica");
+			$filename_etic=$request->input("filename_etic");
+			$ddd=date("Y-m-d");
+			prodotti::where('id', $id_pns_tecnica)
+			  ->update(['sign_tecnica' => $id_user,'tecnica_sign_date'=>$ddd]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_tecnica;
+			 $log_event->operazione="Sign Documentazione Tecnica";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="--";
+			 $log_event->save();				  
+		}		
+				
+
 		
 		$btn_remove_etic=$request->input("btn_remove_etic");
 		if ($btn_remove_etic=="remove") {
@@ -414,6 +482,53 @@ public function __construct()
 			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_cert");
 			 $log_event->save();				  
 		}		
+		
+		$btn_remove_udi=$request->input("btn_remove_udi");
+		if ($btn_remove_udi=="remove") {
+			$id_remove_udi=$request->input("id_remove_udi");
+			prodotti::where('id', $id_remove_udi)
+			  ->update(['sign_udi' =>null,'udi_di'=>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_udi;
+			 $log_event->operazione="Remove Sign UDI-DI";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_udi");
+			 $log_event->save();				  
+		}	
+
+		$btn_remove_altridoc=$request->input("btn_remove_altridoc");
+		if ($btn_remove_altridoc=="remove") {
+			$id_remove_altridoc=$request->input("id_remove_altridoc");
+			prodotti::where('id', $id_remove_altridoc)
+			  ->update(['sign_altro' =>null,'altri_doc'=>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_altridoc;
+			 $log_event->operazione="Remove Sign altri documenti";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_altridoc");
+			 $log_event->save();				  
+		}
+
+		$btn_remove_tecnica=$request->input("btn_remove_tecnica");
+		if ($btn_remove_tecnica=="remove") {
+			$id_remove_tecnica=$request->input("id_remove_tecnica");
+			prodotti::where('id', $id_remove_tecnica)
+			  ->update(['sign_tecnica' =>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_tecnica;
+			 $log_event->operazione="Remove Sign documentazione tecnica";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_tecnica");
+			 $log_event->save();				  
+		}
+
+		
 		
 		
 		$elenco_pns=DB::table('prodotti')

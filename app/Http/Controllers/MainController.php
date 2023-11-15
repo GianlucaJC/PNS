@@ -224,8 +224,10 @@ public function __construct()
 			if ($recensione[0]->sign_altro!=null) $signr++;
 			if ($recensione[0]->sign_tecnica!=null) $signr++;
 
+			$check_ready_sign=6;
+			if ($recensione[0]->ivd=="IVD" || $recensione[0]->ivd=="RIVIVD") $check_ready_sign=7;
 			
-			if ($signr==7  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
+			if ($signr==$check_ready_sign  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
 		}
 
 

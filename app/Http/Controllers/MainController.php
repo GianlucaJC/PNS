@@ -220,7 +220,12 @@ public function __construct()
 			if ($recensione[0]->sign_scheda_t!=null) $signr++;
 			if ($recensione[0]->sign_scheda_s!=null) $signr++;
 			if ($recensione[0]->sign_cert!=null) $signr++;
-			if ($signr==4  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
+			if ($recensione[0]->sign_udi!=null) $signr++;
+			if ($recensione[0]->sign_altro!=null) $signr++;
+			if ($recensione[0]->sign_tecnica!=null) $signr++;
+
+			
+			if ($signr==7  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
 		}
 
 

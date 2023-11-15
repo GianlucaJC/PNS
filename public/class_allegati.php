@@ -1,6 +1,8 @@
 <!-- ALLEGATI -->
 <?php
 	$operazione=$_POST['operazione'];
+	$sign_qa=null;
+	if (isset($_POST['sign_qa'])) $sign_qa=$_POST['sign_qa'];
 ?>
 <!-- ref https://github.com/danielm/uploader -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -178,7 +180,7 @@ if (isset($_POST['file_tec']) && $_POST['file_tec']=="1") {
 
 
 <?php
-if (isset($_POST['sign_tecnica']) && strlen($_POST['sign_tecnica'])!=0) {
+if (isset($_POST['sign_tecnica']) && strlen($_POST['sign_tecnica'])!=0 && $sign_qa==null) {
 	$js="";
 	$js.="if ($('#motivazione_elimina_tecnica').val().length==0) ";
 	$js.="   {alert('Definire la motivazione');event.preventDefault();}";

@@ -6,6 +6,11 @@
 		if ($pns->sign_scheda_t!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_scheda_s!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_cert!=null) {$colo_status="warning";$sign_ready++;}
+		if ($pns->sign_udi!=null) {$colo_status="warning";$sign_ready++;}
+		if ($pns->sign_altro!=null) {$colo_status="warning";$sign_ready++;}
+		if ($pns->sign_tecnica!=null) {$colo_status="warning";$sign_ready++;}
+
+
 		
 		//check documentazione tecnica pronta per la firma
 		$doc_tecnica="0";$file_tec=1;
@@ -29,7 +34,7 @@
 
 
 		if ($colo_status=="warning") $status_text="InRev";
-		if ($sign_ready==4 || ($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1)) {
+		if ($sign_ready==7 || ($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1)) {
 			$status_text="ReadySign";
 			$colo_status="warning";
 		}
@@ -62,11 +67,11 @@
 				<a href="{{route('recensione',['id'=>$pns->id])}}" >
 					<button type="button" class="btn btn-primary" alt='Completa scheda'><i class="fas fa-edit fa-xs" title="Completa scheda"></i></button>
 				</a>									
-				@elseif($pns->sign_qa==null && $sign_ready!=4 && $pns->progetto_rd_sn!="S")
+				@elseif($pns->sign_qa==null && $sign_ready!=7 && $pns->progetto_rd_sn!="S")
 				<a href="{{route('recensione',['id'=>$pns->id])}}" >
 					<button type="button" class="btn btn-info" alt='Visualizza scheda'><i class="fas fa-info-circle fa-xs" title="Visualizza scheda"></i></button>
 				</a>									
-				@elseif(($sign_ready==4 || (($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1)) )&& $pns->sign_qa==null)
+				@elseif(($sign_ready==7 || (($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1)) )&& $pns->sign_qa==null)
 					<a href="{{route('recensione',['id'=>$pns->id])}}" >
 						<button type="button" class="btn btn-primary" alt='SignQA'><i class="fas fa-signature fa-xs" title="SignQA"></i></button>
 					</a>

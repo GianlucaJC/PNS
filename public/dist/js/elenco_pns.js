@@ -317,7 +317,7 @@ function ins_doc() {
 			headers: {
 			  "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
 			},
-			body: 'operazione='+operazione+'&id_pns='+id_pns+'&file_tec='+file_tec+'&url_file='+url_file+'&sign_tecnica='+sign_tecnica
+			body: 'operazione='+operazione+'&id_pns='+id_pns+'&file_tec='+file_tec+'&url_file='+url_file+'&sign_tecnica='+sign_tecnica+'&sign_qa='+sign_qa
 		})
 		.then(response => {
 			if (response.ok) {

@@ -15,13 +15,15 @@
 		
 		//check documentazione tecnica pronta per la firma
 		$doc_tecnica="0";$file_tec=1;
+		
+		//$pns->tecnica_eudamed_note &&
 		if ($pns->tecnica_file_note!=null &&
 			$pns->tecnica_file_data &&
 			$pns->tecnica_repertorio &&
 			$pns->tecnica_ministero_data &&
-			$pns->tecnica_basic_udi &&
-			$pns->tecnica_eudamed_note &&
-			$pns->tecnica_eudamed_data)	{
+			$pns->tecnica_basic_udi && 
+			($pns->tecnica_eudamed_sn==0 || ($pns->tecnica_eudamed_sn==1  && $pns->tecnica_eudamed_data))
+			)	{
 			$doc_tecnica="1";
 		}
 		$url_file="";
@@ -320,6 +322,7 @@
 					data-tecnica_ministero_data='{{ $pns->tecnica_ministero_data }}'
 					data-tecnica_basic_udi='{{ $pns->tecnica_basic_udi }}'
 					data-tecnica_eudamed_note='{{ $pns->tecnica_eudamed_note }}'
+					data-tecnica_eudamed_sn='{{ $pns->tecnica_eudamed_sn }}'
 					data-tecnica_eudamed_data='{{ $pns->tecnica_eudamed_data }}' 
 					data-doc_tecnica='{{ $doc_tecnica }}'
 					data-file_tec='{{ $file_tec }}'

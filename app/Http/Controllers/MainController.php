@@ -296,7 +296,7 @@ public function __construct()
 			$id_pns_tecnica=$request->input("id_pns_tecnica");
 
 			prodotti::where('id', $id_pns_tecnica)
-			  ->update(['tecnica_file_note' => $request->input("tecnica_file_note"),'tecnica_file_data'=>$request->input("tecnica_file_data"),'tecnica_repertorio'=>$request->input("tecnica_repertorio"),'tecnica_ministero_data'=>$request->input("tecnica_ministero_data"),'tecnica_basic_udi'=>$request->input("tecnica_basic_udi"),'tecnica_eudamed_note'=>$request->input("tecnica_eudamed_note"),'tecnica_eudamed_data'=>$request->input("tecnica_eudamed_data")]);
+			  ->update(['tecnica_file_note' => $request->input("tecnica_file_note"),'tecnica_file_data'=>$request->input("tecnica_file_data"),'tecnica_repertorio'=>$request->input("tecnica_repertorio"),'tecnica_ministero_data'=>$request->input("tecnica_ministero_data"),'tecnica_basic_udi'=>$request->input("tecnica_basic_udi"),'tecnica_eudamed_note'=>$request->input("tecnica_eudamed_note"),'tecnica_eudamed_sn'=>$request->input("tecnica_eudamed_sn"),'tecnica_eudamed_data'=>$request->input("tecnica_eudamed_data")]);
 			
 		}
 		

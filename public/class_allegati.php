@@ -157,16 +157,37 @@ if (isset($_POST['file_tec']) && $_POST['file_tec']=="1") {
 
 		<div class="row mt-2">
 
-			
-			<div class="col-md-8">
+			<!--per ora disattivato!-->
+			<div class="col-md-8" style='display:none'>
 				<label for="tecnica_eudamed_note">Registrazione EUDAMED </label>
 				<input type='text' class="form-control" id="tecnica_eudamed_note"  name="tecnica_eudamed_note" placeholder='Numero repertorio'>
 			</div>
 					
+			<div class="col-md-8">
+				<div class="form-floating">
+				<select class='form-select' id='tecnica_eudamed_sn' aria-label='Loc' name='tecnica_eudamed_sn' onchange=" $('#div_data_edudamed').hide();if (this.value=='1') $('#div_data_edudamed').show(200);" >
 					
-			<div class="col-md-4">
-				<label for="tecnica_eudamed_data">Data</label>
+						<option value="0"
+						>Non Applicabile</option>
+						<option value="1"
+						>Applicabile</option>
+				</select>
+					
+				<label for="tecnica_eudamed_sn">Eudamed SI/NO</label>
+				</div>
+			</div>					
+					
+					
+
+			<div class="col-md-8" style='display:none'>
+				<label for="tecnica_eudamed_note">Registrazione EUDAMED </label>
+				<input type='text' class="form-control" id="tecnica_eudamed_note"  name="tecnica_eudamed_note" placeholder='Numero repertorio'>
+			</div>
+
+					
+			<div class="col-md-4" style='display:none' id='div_data_edudamed'>
 				<input type="date" class="form-control" id="tecnica_eudamed_data" name="tecnica_eudamed_data">
+				<label for="tecnica_eudamed_data">Data</label>
 			</div>
 		</div>		
 		

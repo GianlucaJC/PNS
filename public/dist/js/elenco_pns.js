@@ -335,6 +335,8 @@ function ins_doc() {
 
 			set_class_allegati();
 			if (from==7) {
+				if ($("#info_tecnica"+id_pns).data("doc_tecnica")==1) 
+					$("#sez_allegati :input").prop("disabled", true);				
 				//popolamento dati da span tramite prop data
 				$("#tecnica_file_note").val($("#info_tecnica"+id_pns).data("tecnica_file_note"))
 				$("#tecnica_file_data").val($("#info_tecnica"+id_pns).data("tecnica_file_data"))
@@ -342,6 +344,11 @@ function ins_doc() {
 				$("#tecnica_ministero_data").val($("#info_tecnica"+id_pns).data("tecnica_ministero_data"))
 				$("#tecnica_basic_udi").val($("#info_tecnica"+id_pns).data("tecnica_basic_udi"))
 				$("#tecnica_eudamed_note").val($("#info_tecnica"+id_pns).data("tecnica_eudamed_note"))
+				
+				$('#div_data_edudamed').hide()
+				if ($("#info_tecnica"+id_pns).data("tecnica_eudamed_sn")=="1") $('#div_data_edudamed').show()
+				
+				$("#tecnica_eudamed_sn").val($("#info_tecnica"+id_pns).data("tecnica_eudamed_sn"))
 				$("#tecnica_eudamed_data").val($("#info_tecnica"+id_pns).data("tecnica_eudamed_data"))				
 			}
 			
@@ -495,7 +502,11 @@ function ins_doc() {
 		html=""
 		html+=`<input type='hidden' name='id_pns_tecnica' id='id_pns_tecnica' value='`+id_pns+`'>`;
 		if (!sign_tecnica) {
+			
+			
 			if ($("#info_tecnica"+id_pns).data("doc_tecnica")==1) {
+				html+=`<button type="button" id="btn_sblocca" class="btn btn-info mr-5" onclick='$("#sez_allegati :input").prop("disabled", false);$("#btn_sign").hide();$("#btn_sblocca").hide();'>Sblocca modifica</button>`
+				
 				html+=`<button type="submit" class="btn btn-success mr-2"  id='btn_sign' name='btn_sign' value='sign_tecnica' >Firma</button>`
 			}
 			html+=`<button type="submit" class="btn btn-success"   id='btn_save_tec' name='btn_save_tec' value='save'>Salva</button>`

@@ -47,7 +47,7 @@ public function __construct()
 	
 	
 	public function import_code($data_import) {
-		$all_data=art_ana::from('art_ana as aa')
+		$all_data=art_ana::from('ART_ANA as aa')
 		->select("aa.TCTIMESTAMP","aa.COD_ART","aa.DES_ART","aa.COD_CAT","au.TEMPERATURA","au.GGSCAD","au.MINORDCLI")
 		->leftjoin('art_user as au','aa.COD_ART','au.COD_ART')
 		->where('aa.TCTIMESTAMP','>',$data_import)

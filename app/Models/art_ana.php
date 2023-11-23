@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class art_ana extends Model
 {
     use HasFactory;
-	protected $table="art_ana";
+	protected $table="ART_ANA";
 	protected $connection = 'target';
 }

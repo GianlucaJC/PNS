@@ -48,14 +48,14 @@ public function __construct()
 	
 	public function import_code($data_import) {
 		$all_data=art_ana::from('ART_ANA as aa')
-		->select("aa.TCTIMESTAMP","aa.COD_ART","aa.DES_ART","aa.COD_CAT","au.TEMPERATURA","au.GGSCAD","au.MINORDCLI")
+		->select("aa.DATA_INSERIMENTO","aa.COD_ART","aa.DES_ART","aa.COD_CAT","au.TEMPERATURA","au.GGSCAD","au.MINORDCLI")
 		->leftjoin('ART_USER as au','aa.COD_ART','au.COD_ART')
-		->where('aa.TCTIMESTAMP','>',$data_import)
-		->orderBy('aa.TCTIMESTAMP')
+		->where('aa.DATA_INSERIMENTO','>',$data_import)
+		->orderBy('aa.DATA_INSERIMENTO')
 		->get();
 		$data_up="?";
 		foreach($all_data as $data) {
-			$data_up=$data->TCTIMESTAMP;
+			$data_up=$data->DATA_INSERIMENTO;
 			$codice=$data->COD_ART;
 			$pre=substr($codice,0,1);
 			$procedi=false;

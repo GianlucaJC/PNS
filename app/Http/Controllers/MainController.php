@@ -53,9 +53,9 @@ public function __construct()
 		->where('aa.DATA_INSERIMENTO','>',$data_import)
 		->orderBy('aa.DATA_INSERIMENTO')
 		->get();
-		$data_up="?";
+		$data_up=date("Y-m-d H:i:s");
 		foreach($all_data as $data) {
-			$data_up=$data->DATA_INSERIMENTO;
+			//$data_up=$data->DATA_INSERIMENTO;
 			$codice=$data->COD_ART;
 			$pre=substr($codice,0,1);
 			$procedi=false;
@@ -103,11 +103,11 @@ public function __construct()
 			$prodotto->ivd=$ivd;
 			$prodotto->save();
 		}
-		if ($data_up!="?") {
-			$last_ts_target = last_ts_target::find(1);
-			$last_ts_target->last_ts=$data_up;
-			$last_ts_target->save();
-		}
+
+		$last_ts_target = last_ts_target::find(1);
+		$last_ts_target->last_ts=$data_up;
+		$last_ts_target->save();
+		
 	}
 	
 	

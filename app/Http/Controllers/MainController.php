@@ -54,6 +54,7 @@ public function __construct()
 		->whereRaw($cond)		
 		->orderBy('aa.DATA_INSERIMENTO')
 		->get();
+		print_r($all_data);
 		$data_up=date("Y-m-d H:i:s");
 		foreach($all_data as $data) {
 			//$data_up=$data->DATA_INSERIMENTO;

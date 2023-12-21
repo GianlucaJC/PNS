@@ -83,7 +83,6 @@ public function __construct()
 
 			$info_prod=DB::table('prodotti')->select('id')->where('codice','=',$codice);
 			$count=$info_prod->count();
-			echo "---------------------------------->count : $count";
 			if ($count==0)
 				$prodotto=new prodotti;
 			else {

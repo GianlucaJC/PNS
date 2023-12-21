@@ -48,7 +48,7 @@ public function __construct()
 	
 	public function import_code($data_import) {
 		$cond="cast(concat(substr(aa.DATA_INSERIMENTO,1,10),' ',substr(aa.ORA_INS,12)) as datetime)>'$data_import'";
-		$all_data=art_ana::from('ART_ANAx as aa')
+		$all_data=art_ana::from('ART_ANA as aa')
 		->select("aa.DATA_INSERIMENTO","aa.COD_ART","aa.DES_ART","aa.COD_CAT","au.TEMPERATURA","au.GGSCAD","au.MINORDCLI")
 		->leftjoin('ART_USER as au','aa.COD_ART','au.COD_ART')
 		->whereRaw($cond)		
@@ -83,6 +83,7 @@ public function __construct()
 
 			$info_prod=DB::table('prodotti')->select('id')->where('codice','=',$codice);
 			$count=$info_prod->count();
+			echo "---------------------------------->count : $count";
 			if ($count==0)
 				$prodotto=new prodotti;
 			else {

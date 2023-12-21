@@ -115,8 +115,10 @@ public function __construct()
 		$last_ts_target=last_ts_target::where('id','=',1)->get();
 		//in caso di prima importazione decidere data fittizia di inizio import
 		$data_import="";
-		if (isset($last_ts_target[0]))
+		if (isset($last_ts_target[0])) {
 			$data_import=$last_ts_target[0]->last_ts;
+			$data_import=substr($data_import,0,10)." 00:00:00";
+		}	
 		
 		if (strlen($data_import)>0) $this->import_code($data_import);
 		

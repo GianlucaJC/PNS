@@ -47,10 +47,11 @@ public function __construct()
 	
 	
 	public function import_code($data_import) {
-		$all_data=art_ana::from('ART_ANA as aa')
+		$cond="cast(concat(substr(aa.DATA_INSERIMENTO,1,10),' ',substr(aa.DATA_INSERIMENTO,12)) as datetime)>'$data_import'";
+		$all_data=art_ana::from('ART_ANAx as aa')
 		->select("aa.DATA_INSERIMENTO","aa.COD_ART","aa.DES_ART","aa.COD_CAT","au.TEMPERATURA","au.GGSCAD","au.MINORDCLI")
 		->leftjoin('ART_USER as au','aa.COD_ART','au.COD_ART')
-		->where('aa.DATA_INSERIMENTO','>',$data_import)
+		->whereRaw($cond)		
 		->orderBy('aa.DATA_INSERIMENTO')
 		->get();
 		$data_up=date("Y-m-d H:i:s");
@@ -117,7 +118,6 @@ public function __construct()
 		$data_import="";
 		if (isset($last_ts_target[0])) {
 			$data_import=$last_ts_target[0]->last_ts;
-			$data_import=substr($data_import,0,10)." 00:00:00";
 		}	
 		
 		if (strlen($data_import)>0) $this->import_code($data_import);

@@ -100,8 +100,8 @@ function view_doc() {
 	$("#btn_sign").hide();
 	
 
-	title_doc="Definizione etichetta";
-	if (from=="1") title_doc="Definizione Etichetta";
+	title_doc="Definizione etichetta e foto";
+	if (from=="1") title_doc="Definizione Etichetta e foto";
 	if (from=="2") title_doc="Definizione Scheda tecnica";
 	if (from=="3") title_doc="Definizione Scheda sicurezza";
 	if (from=="4") title_doc="Definizione Certificato";
@@ -276,8 +276,8 @@ function ins_doc() {
 			sign_qa=ins_doc.sign_qa	
 	
 
-	title_doc="Definizione etichetta";
-	if (from=="1") title_doc="Definizione Etichetta";
+	title_doc="Definizione etichetta e foto";
+	if (from=="1") title_doc="Definizione Etichetta e foto";
 	if (from=="2") title_doc="Definizione Scheda tecnica";
 	if (from=="3") title_doc="Definizione Scheda sicurezza";
 	if (from=="4") title_doc="Definizione Certificato";

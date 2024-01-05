@@ -143,6 +143,7 @@
 								<th style='width:40px'>Status</th>
 								<th>Descrizione</th>
 								<th style='width:120px'>Data creazione</th>
+								<th style='width:120px'>LastUpdate</th>
 								<th style='width:70px'>IVD</th>
 								<th>Operazioni</th>
 							</tr>
@@ -157,6 +158,7 @@
 								<th style='width:70px'>Codice</th>
 								<th>Descrizione</th>
 								<th style='width:120px'>Data creazione</th>
+								<th style='width:120px'>LastUpdate</th>
 								<th style='width:70px'>IVD</th>
 								<th></th>
 							</tr>
@@ -261,6 +263,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.143"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.144"></script>
 
 @endsection

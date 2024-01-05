@@ -48,7 +48,7 @@ $(document).ready( function () {
 function select_prog(value) {
 	$(".progetto").hide();
 	if (value=="S") {
-		$("#div_prog_si").show(120);
+		//$("#div_prog_si").show(120);
 		$("#progetto_rd_motivazione_no").val("")
 	}
 	if (value=="N") {

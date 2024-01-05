@@ -112,9 +112,12 @@
 		</td>
 
 		<td style='width:120px'>
-			{{ $pns->updated_at }}
-
+			{{ $pns->created_at }}
 		</td>
+		<td style='width:120px'>
+			{{ $pns->updated_at }}
+		</td>
+
 
 		<td style='width:70px'>
 			{{ $pns->ivd }}

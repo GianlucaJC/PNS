@@ -196,12 +196,15 @@ function view_doc() {
 			}		
 	}	
 	
-	if (from==4) {
-		url_cert=resource_file
+
+	
+	if (from==4 && resource_file.length>0) {
+		filex="allegati/"+id_pns+"/cert/"+resource_file
 		html=`
-			<a href='`+url_cert+`' target='_blank'>
+			<a href='`+filex+`' target='_blank'>
 				<button type="button" class="btn btn-success" >Apri Certificato</button>
-			</a>`
+			</a>
+		`	
 
 		if (sign_qa.length==0) {
 			html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma e URL Certificato</button>
@@ -295,14 +298,20 @@ function ins_doc() {
 		html=`<button type="submit" class="btn btn-outline-success"  onclick='sign_etic()' id='btn_sign' name='btn_sign' value='sign_etic' disabled>Firma</button>`
 		$("#div_save").html(html)
 	}
+
+	if (from=="4") {
+		html=`<button type="submit" class="btn btn-outline-success"  onclick='sign_cert()' id='btn_sign' name='btn_sign' value='sign_cert' disabled>Firma</button>`
+		$("#div_save").html(html)
+	}
  
 	file_tec=$("#info_tecnica"+id_pns).data("file_tec");
 	url_file=$("#info_tecnica"+id_pns).data("url_file");
 	sign_tecnica=$("#info_tecnica"+id_pns).data("sign_tecnica");
 
-	if (from=="1" || from=="7") {
+	if (from=="1" || from=="4" || from=="7") {
 		operazione=""
 		if (from=="1") operazione="etic";
+		if (from=="4") operazione="cert";
 		if (from=="7") operazione="tecnica";
 		html=""
 		html+="<center><div class='spinner-border text-secondary' role='status'></div></center>";
@@ -320,6 +329,7 @@ function ins_doc() {
 			body: 'operazione='+operazione+'&id_pns='+id_pns+'&file_tec='+file_tec+'&url_file='+url_file+'&sign_tecnica='+sign_tecnica+'&sign_qa='+sign_qa
 		})
 		.then(response => {
+			
 			if (response.ok) {
 			   return response.text();
 			}
@@ -352,6 +362,7 @@ function ins_doc() {
 				$("#tecnica_eudamed_data").val($("#info_tecnica"+id_pns).data("tecnica_eudamed_data"))				
 			}
 			
+			
 			if (sign_tecnica) {
 				/*
 					disabilito la sezione documentazione tecnica perchè
@@ -363,6 +374,7 @@ function ins_doc() {
 				
 				
 			}
+			
 
 		})
 		.catch(status, err => {
@@ -425,7 +437,7 @@ function ins_doc() {
 		$('#modalvalue').modal('show')		
 	}	
 	
-	if (from=="4") {
+	if (from=="4old") {
 		html=`
 			<input type='hidden' name='id_pns_cert' value='`+id_pns+`'>
 			<div class='form-group '>
@@ -589,6 +601,24 @@ function sign_etic() {
 
 	$("#id_pns_etic").val(sign_etic.id_pns)
 	$("#filename_etic").val(sign_etic.filename)
+	
+}
+
+function sign_cert() {
+	//impostato da elenco_pns.js o demo-config.js
+	if( typeof sign_cert.id_pns == 'undefined' ) {
+		event.preventDefault()
+		return false
+	}
+	data_cert=$("#data_cert").val()
+	if (data_cert.length==0) {
+		event.preventDefault()
+		alert("Per apporre la firma è necessario specificare una data!")
+		return false
+	}
+
+	$("#id_pns_cert").val(sign_cert.id_pns)
+	$("#filename_cert").val(sign_cert.filename)
 	
 }
 

@@ -253,6 +253,8 @@
 				?>			
 				</span>
 				<?php
+				
+				
 					if ($cert_status==0) $proc="ins_doc";
 					else $proc="view_doc";
 					$js="";					
@@ -263,7 +265,7 @@
 					if ($cert_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
 				?>		
-				<a href="javasript:void(0)"  title="Certificato">
+				<a href="javascript:void(0)"  title="Certificato">
 					<button type="button" class="btn btn-{{$colo_stato_cert}}"  onclick="{{$js}}" {{$stato_sign}}>
 					<i class="fas fa-check-square fa-xs"></i></button>
 				</a>										

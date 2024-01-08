@@ -136,19 +136,36 @@
 			<?php
 				if (isset($recensione[0]) && $recensione[0]->ivd=="IVD") {
 			?>
+			
+			
+			
 			<div class="row mb-3">
+
 				<div class="col-md-3">
 					<label for="gspr_applicabili">GSPR applicabili</label>
-					<div class="form-floating mb-3">
-						 <textarea class="form-control" {{$dis}} id="gspr_applicabili" name="gspr_applicabili" style="height: 80%;" rows="3">{{$recensione[0]->gspr_applicabili ?? ''}}</textarea>
-					</div>
-				</div>	
+					<select class="form-select form-select-lg" {{$dis}} name="gspr_applicabili" id="gspr_applicabili"  >
+						<option value=''>Select...</option>
+						@foreach($gspr as $gs) 
+							<option value='{{$gs->id}}'
+							@if (isset($recensione[0]) && $recensione[0]->gspr_applicabili==$gs->id) selected
+							@endif
+							>{{$gs->voce}}</option>
+						@endforeach
+					</select>
+				</div>
+
 				<div class="col-md-3">
 					<label for="risk_management">Risk Management File applicabile</label>
-					<div class="form-floating mb-3">
-						 <textarea class="form-control" {{$dis}} id="risk_management" name="risk_management" style="height: 80%;" rows="3">{{$recensione[0]->risk_management ?? ''}}</textarea>
-					</div>
-				</div>
+					<select class="form-select form-select-lg" {{$dis}} name="risk_management" id="risk_management"  >
+						<option value=''>Select...</option>
+						@foreach($risk as $ri) 
+							<option value='{{$ri->id}}'
+							@if (isset($recensione[0]) && $recensione[0]->risk_management==$ri->id) selected
+							@endif							
+							>{{$ri->voce}}</option>
+						@endforeach
+					</select>
+				</div>	
 
 				<div class="col-md-3">
 						<label for="progetto_rd_sn">Progetto R&D*</label>

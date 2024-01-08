@@ -98,6 +98,18 @@ function set_class_allegati() {
 		  //update_doc(doc_id)
 	  }
 
+
+	  //from==4 etichetta
+	  if (from=="4") {
+		  
+		  $('#btn_sign').prop('disabled', false)
+		  $('#btn_sign').removeClass('btn-outline-success');
+		  $('#btn_sign').addClass('btn-success');
+		  sign_cert.filename=data.filename
+		  sign_cert.id_pns=id_pns
+		  //update_doc(doc_id)
+	  }
+
 	  
 
     },

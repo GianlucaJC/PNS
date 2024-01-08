@@ -34,6 +34,13 @@ Route::post('elenco_pns', [ 'as' => 'elenco_pns', 'uses' => 'App\Http\Controller
 Route::get('elenco_pns', [ 'as' => 'elenco_pns', 'uses' => 'App\Http\Controllers\MainController@elenco_pns'])->middleware(['auth']);
 
 
+Route::get('gspr', [ 'as' => 'gspr', 'uses' => 'App\Http\Controllers\ControllerArchivi@gspr'])->middleware(['auth']);
+
+Route::post('gspr', [ 'as' => 'gspr', 'uses' => 'App\Http\Controllers\ControllerArchivi@gspr'])->middleware(['auth']);
+
+Route::get('risk', [ 'as' => 'risk', 'uses' => 'App\Http\Controllers\ControllerArchivi@risk'])->middleware(['auth']);
+
+Route::post('risk', [ 'as' => 'risk', 'uses' => 'App\Http\Controllers\ControllerArchivi@risk'])->middleware(['auth']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

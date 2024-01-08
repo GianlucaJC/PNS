@@ -246,7 +246,7 @@
 	<!-- per upload -->
 	<script src="{{ URL::asset('/') }}dist/js/upload/jquery.dm-uploader.min.js"></script>
 	<script src="{{ URL::asset('/') }}dist/js/upload/demo-ui.js?ver=1.311"></script>
-	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.412"></script>	
+	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.414"></script>	
 
 	
 	<!-- inclusione standard
@@ -263,6 +263,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.144"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.166"></script>
 
 @endsection

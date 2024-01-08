@@ -83,16 +83,16 @@ use App\Models\User;
 						</a>
 						<ul class="nav nav-treeview">
 						  <li class="nav-item">
-							<a href="#" class="nav-link">
+							<a href="{{route('gspr')}}" class="nav-link">
 							  <i class="far fa-circle nav-icon"></i>
-							  <p>Tipologie di ...</p>
+							  <p>Voci GSPR</p>
 							</a>
 						  </li>
 						
 						  <li class="nav-item">
-							<a href="#" class="nav-link ">
+							<a href="{{route('risk')}}" class="nav-link ">
 							  <i class="far fa-circle nav-icon"></i>
-							  <p>Tipo ...</p>
+							  <p>Voci RISK</p>
 							</a>
 						  </li>
 

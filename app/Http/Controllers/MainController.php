@@ -17,6 +17,8 @@ use App\Models\prodotti;
 use App\Models\last_ts_target;
 use App\Models\log_event;
 use App\Models\utenti;
+use App\Models\gspr;
+use App\Models\risk;
 
 use DB;
 use Mail;
@@ -232,11 +234,12 @@ public function __construct()
 			
 			if ($signr==$check_ready_sign  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
 		}
+		$gspr=gspr::select('id','voce')->get();
+		$risk=risk::select('id','voce')->get();
 
 
 
-
-		return view('all_views/pns/recensione')->with('recensione',$recensione)->with('id',$id)->with('sign_recensione',$sign_recensione)->with('arr_utenti',$arr_utenti)->with('sign_qa',$sign_qa)->with('sign_ready',$sign_ready);
+		return view('all_views/pns/recensione')->with('recensione',$recensione)->with('id',$id)->with('sign_recensione',$sign_recensione)->with('arr_utenti',$arr_utenti)->with('sign_qa',$sign_qa)->with('sign_ready',$sign_ready)->with('gspr',$gspr)->with('risk',$risk);
 	}
 	
 	
@@ -319,6 +322,46 @@ public function __construct()
 			 $log_event->dettaglio="Data etichetta: ".$request->input("data_etic");
 			 $log_event->save();				  
 		}
+
+		if ($btn_sign=="sign_cert") {
+			$id_pns_cert=$request->input("id_pns_cert");
+			$filename_cert=$request->input("filename_cert");
+
+			prodotti::where('id', $id_pns_cert)
+			  ->update(['sign_cert' => $id_user,'data_cert'=>$request->input("data_cert"),'url_cert'=>$filename_cert]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_cert;
+			 $log_event->operazione="Sign Certificato";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data certificato: ".$request->input("data_cert");
+			 $log_event->save();				  
+		}
+		
+		/*old_sign_cert
+		if ($btn_sign=="sign_cert") {
+			$url_cert=$request->input("url_cert");
+			if (!preg_match("~^(?:f|ht)tps?://~i", $url_cert)) {
+				$url_cert = "http://" . $url_cert;
+			}
+			
+			$data_cert=$request->input("data_cert");
+			$id_pns_cert=$request->input("id_pns_cert");
+
+			prodotti::where('id', $id_pns_cert)
+			  ->update(['sign_cert' => $id_user,'url_cert'=>$url_cert,'data_cert'=>$data_cert]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_cert;
+			 $log_event->operazione="Sign Certificato";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data certificato: ".$data_cert;
+			 $log_event->save();			
+		}
+		*/		
+		
 		if ($btn_sign=="sign_scheda_t") {
 			$url_scheda_t=$request->input("url_scheda_t");
 			if (!preg_match("~^(?:f|ht)tps?://~i", $url_scheda_t)) {
@@ -361,26 +404,7 @@ public function __construct()
 			 $log_event->save();			
 		}		
 
-		if ($btn_sign=="sign_cert") {
-			$url_cert=$request->input("url_cert");
-			if (!preg_match("~^(?:f|ht)tps?://~i", $url_cert)) {
-				$url_cert = "http://" . $url_cert;
-			}
-			
-			$data_cert=$request->input("data_cert");
-			$id_pns_cert=$request->input("id_pns_cert");
-
-			prodotti::where('id', $id_pns_cert)
-			  ->update(['sign_cert' => $id_user,'url_cert'=>$url_cert,'data_cert'=>$data_cert]);
-
-			 $log_event=new log_event;
-			 $log_event->user=$id_user;
-			 $log_event->id_pns=$id_pns_cert;
-			 $log_event->operazione="Sign Certificato";
-			 $log_event->modulo="elenco_pns";
-			 $log_event->dettaglio="Data certificato: ".$data_cert;
-			 $log_event->save();			
-		}		
+		
 		
 		if ($btn_sign=="sign_udi") {
 			$udi_di=$request->input("udi_di");
@@ -417,7 +441,7 @@ public function __construct()
 
 		if ($btn_sign=="sign_tecnica") {
 			$id_pns_tecnica=$request->input("id_pns_tecnica");
-			$filename_etic=$request->input("filename_etic");
+			
 			$ddd=date("Y-m-d");
 			prodotti::where('id', $id_pns_tecnica)
 			  ->update(['sign_tecnica' => $id_user,'tecnica_sign_date'=>$ddd]);

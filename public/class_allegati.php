@@ -110,6 +110,23 @@ if (isset($_POST['file_tec']) && $_POST['file_tec']=="1") {
 	 </div>
 	<?php } 
 
+
+	if ($operazione=="cert") {?>
+	 <div class="form-group">
+		<div class="row mt-2">
+			<div class="col-md-4">
+				<input type='hidden' name='id_pns_cert' id='id_pns_cert'>
+				<input type='hidden' name='filename_cert' id='filename_cert'>
+			
+				<label for="data_etic">Data Certificato</label>
+				<input type="date" class="form-control" id="data_cert" name="data_cert" aria-describedby="Data Certificato">
+			</div>
+		</div>
+
+	 </div>
+	<?php } 
+
+
 	if ($operazione=="tecnica") {?>
 	 <div class="form-group">
 		<div class="row mt-2">

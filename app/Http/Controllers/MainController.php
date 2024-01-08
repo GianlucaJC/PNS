@@ -221,6 +221,7 @@ public function __construct()
 			$sign_recensione=$recensione[0]->sign_recensione;
 			$sign_qa=$recensione[0]->sign_qa;
 			$signr=0;
+			if ($recensione[0]->sign_ft!=null) $signr++;
 			if ($recensione[0]->sign_etichetta!=null) $signr++;
 			if ($recensione[0]->sign_scheda_t!=null) $signr++;
 			if ($recensione[0]->sign_scheda_s!=null) $signr++;
@@ -229,8 +230,8 @@ public function __construct()
 			if ($recensione[0]->sign_altro!=null) $signr++;
 			if ($recensione[0]->sign_tecnica!=null) $signr++;
 
-			$check_ready_sign=6;
-			if ($recensione[0]->ivd=="IVD" || $recensione[0]->ivd=="RIVIVD") $check_ready_sign=7;
+			$check_ready_sign=7;
+			if ($recensione[0]->ivd=="IVD" || $recensione[0]->ivd=="RIVIVD") $check_ready_sign=8;
 			
 			if ($signr==$check_ready_sign  || ($recensione[0]->ivd=="IVD" && $recensione[0]->progetto_rd_sn=="S" && $recensione[0]->sign_recensione==1)) $sign_ready=true;
 		}
@@ -304,6 +305,23 @@ public function __construct()
 			prodotti::where('id', $id_pns_tecnica)
 			  ->update(['tecnica_file_note' => $request->input("tecnica_file_note"),'tecnica_file_data'=>$request->input("tecnica_file_data"),'tecnica_repertorio'=>$request->input("tecnica_repertorio"),'tecnica_ministero_data'=>$request->input("tecnica_ministero_data"),'tecnica_basic_udi'=>$request->input("tecnica_basic_udi"),'tecnica_eudamed_note'=>$request->input("tecnica_eudamed_note"),'tecnica_eudamed_sn'=>$request->input("tecnica_eudamed_sn"),'tecnica_eudamed_data'=>$request->input("tecnica_eudamed_data")]);
 			
+		}
+
+		$btn_sign=$request->input("btn_sign");
+		if ($btn_sign=="sign_ft") {
+			$id_pns_ft=$request->input("id_pns_ft");
+			$filename_ft=$request->input("filename_ft");
+
+			prodotti::where('id', $id_pns_ft)
+			  ->update(['sign_ft' => $id_user,'data_ft'=>$request->input("data_ft"),'file_ft'=>$filename_ft]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_pns_ft;
+			 $log_event->operazione="Sign Fattibilità Tecnica";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Data ft: ".$request->input("data_ft");
+			 $log_event->save();				  
 		}
 		
 		$btn_sign=$request->input("btn_sign");
@@ -559,6 +577,22 @@ public function __construct()
 			 $log_event->operazione="Remove Sign documentazione tecnica";
 			 $log_event->modulo="elenco_pns";
 			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_tecnica");
+			 $log_event->save();				  
+		}
+
+
+		$btn_remove_ft=$request->input("btn_remove_ft");
+		if ($btn_remove_ft=="remove") {
+			$id_remove_ft=$request->input("id_remove_ft");
+			prodotti::where('id', $id_remove_ft)
+			  ->update(['sign_ft' =>null]);
+
+			 $log_event=new log_event;
+			 $log_event->user=$id_user;
+			 $log_event->id_pns=$id_remove_ft;
+			 $log_event->operazione="Remove Sign Fattibilità tecnica";
+			 $log_event->modulo="elenco_pns";
+			 $log_event->dettaglio="Motivazione: ".$request->input("motivazione_elimina_ft");
 			 $log_event->save();				  
 		}
 

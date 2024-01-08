@@ -1,7 +1,9 @@
 @foreach($elenco_pns as $pns)
 	<?php
 		$colo_status="danger";$status_text="NoRev";
+
 		$sign_ready=0;
+		if ($pns->sign_ft!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_etichetta!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_scheda_t!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_scheda_s!=null) {$colo_status="warning";$sign_ready++;}
@@ -10,8 +12,8 @@
 		if ($pns->sign_altro!=null) {$colo_status="warning";$sign_ready++;}
 		if ($pns->sign_tecnica!=null) {$colo_status="warning";$sign_ready++;}
 
-		$check_ready_sign=6;
-		if ($pns->ivd=="IVD" || $pns->ivd=="RIVIVD") $check_ready_sign=7;
+		$check_ready_sign=7;
+		if ($pns->ivd=="IVD" || $pns->ivd=="RIVIVD") $check_ready_sign=8;
 		
 		//check documentazione tecnica pronta per la firma
 		$doc_tecnica="0";$file_tec=1;
@@ -126,12 +128,13 @@
 
 
 		
-		<td>
+		<td style='min-width:400px'>
 		<?php
 			$stato_sign="disabled";
 			if ($pns->sign_recensione!=null) $stato_sign="";
 
 			$colo_stato_etic="danger";
+			$colo_stato_ft="danger";
 			$colo_stato_tec="danger";
 			$colo_stato_sic="danger";
 			$colo_stato_cert="danger";
@@ -144,6 +147,12 @@
 				$etic_status=1;
 				$colo_stato_etic="success";
 			}	
+			$ft_status=0;
+			if ($pns->sign_ft!=null) {
+				$ft_status=1;
+				$colo_stato_ft="success";
+			}
+			
 			$scheda_t_status=0;
 			if ($pns->sign_scheda_t!=null) {
 				$scheda_t_status=1;
@@ -180,15 +189,41 @@
 			
 			if ($pns->ivd=="IVD" && $pns->progetto_rd_sn=="S" && $pns->sign_recensione==1) {
 				$colo_stato_etic="success";
+				$colo_stato_ft="success";
 				$colo_stato_tec="success";
 				$colo_stato_sic="success";
 				$colo_stato_cert="success";
+				$colo_stato_udi="success";
+				$colo_stato_altro="success";
+				$colo_stato_tecnica="success";
 				$stato_sign="disabled";
 			}				
 			
 			$view_doc="display:none";
 		?>	
 			@if ($pns->dele=="0") 
+				<?php
+					if ($ft_status==0) $proc="ins_doc";
+					else $proc="view_doc";
+					$js="";					
+					$js.="$proc.from=8;";
+					$js.="$proc.id_pns=".$pns->id.";";
+					$js.="$proc.sign_qa='".$pns->sign_qa."';";
+					$js.="$proc.resource_file='".$pns->file_ft."';";
+					if ($ft_status==0) $js.="ins_doc();";
+					else $js.="view_doc();";
+				?>
+				<a href="javascript:void(0)" title="Fattibilità tecnica">
+					<button type="button" class="btn btn-{{$colo_stato_ft}}" onclick="{{$js}}" {{$stato_sign}}><i class="fas fa-cogs fa-xs"></i></button>
+				</a>
+				<span class='firme' style='display:none'>
+				<?php
+					$view_sign=view_sign($arr_utenti,$pns,"sign_etichetta");
+					echo $view_sign;
+				?>
+				</span>					
+			
+			
 				<?php
 					if ($etic_status==0) $proc="ins_doc";
 					else $proc="view_doc";
@@ -209,6 +244,9 @@
 					echo $view_sign;
 				?>
 				</span>	
+
+
+
 
 				<?php
 					if ($scheda_t_status==0) $proc="ins_doc";

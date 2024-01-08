@@ -38,7 +38,7 @@ try {
 	$from=$_POST['from'];
 	//from=="1" da button etichetta  
 	//from=="7" da button documentazione tecnica
-	if ($from=="1" || $from=="4" || $from=="7") {
+	if ($from=="1" || $from=="4" || $from=="7" || $from=="8") {
 		$id_pns=$_POST['id_pns'];
 		$filename=$id_pns.".".$extension;
 		$sub="allegati/$id_pns";
@@ -49,6 +49,8 @@ try {
 			$sub="allegati/$id_pns/cert";
 		if ($from=="7") 
 			$sub="allegati/$id_pns/doc_tecnici";
+		if ($from=="8") 
+			$sub="allegati/$id_pns/ft";		
 		@mkdir($sub);
 	}	
 	

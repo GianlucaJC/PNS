@@ -145,7 +145,7 @@
 								<th style='width:120px'>Data creazione</th>
 								<th style='width:120px'>LastUpdate</th>
 								<th style='width:70px'>IVD</th>
-								<th>Operazioni</th>
+								<th style='min-width:400px'>Operazioni</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -160,7 +160,7 @@
 								<th style='width:120px'>Data creazione</th>
 								<th style='width:120px'>LastUpdate</th>
 								<th style='width:70px'>IVD</th>
-								<th></th>
+								<th style='min-width:400px'></th>
 							</tr>
 						</tfoot>					
 					</table>
@@ -246,7 +246,7 @@
 	<!-- per upload -->
 	<script src="{{ URL::asset('/') }}dist/js/upload/jquery.dm-uploader.min.js"></script>
 	<script src="{{ URL::asset('/') }}dist/js/upload/demo-ui.js?ver=1.311"></script>
-	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.414"></script>	
+	<script src="{{ URL::asset('/') }}dist/js/upload/demo-config.js?ver=2.415"></script>	
 
 	
 	<!-- inclusione standard
@@ -263,6 +263,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.166"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.171"></script>
 
 @endsection

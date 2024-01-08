@@ -1,4 +1,5 @@
 $(document).ready( function () {
+	$('body').addClass("sidebar-collapse");
     $('#tbl_pns tfoot th').each(function () {
         var title = $(this).text();
 		if (title.length!=0)
@@ -107,19 +108,13 @@ function view_doc() {
 	if (from=="4") title_doc="Definizione Certificato";
 	if (from=="5") title_doc="Definizione UDI-DI";
 	if (from=="6") title_doc="Definizione Altri documenti";
+	if (from=="8") title_doc="Definizione Fattibilità tecnica";
 	//from==7 --il view_doc di fatto viene fatto da ins_doc
 	if (from=="100") title_doc="Altro";
 
 	$("#title_doc").html(title_doc)	
 	
 	html="";
-	if (from==1) 
-		html=`<div class="alert alert-warning" role="alert">
-				File associato all'etichetta mancante!
-			</div>`;
-
-	$("#bodyvalue").html(html)
-	
 	$('#modalvalue').modal('show')		
 	
 	
@@ -147,6 +142,7 @@ function view_doc() {
 		}
 		
 	}
+	
 	
 	if (from==2) {
 		url_scheda_t=resource_file
@@ -262,6 +258,29 @@ function view_doc() {
 		}			
 	}	
 
+	if (from==8 && resource_file.length>0) {
+		filex="allegati/"+id_pns+"/ft/"+resource_file
+		html=`
+			<a href='`+filex+`' target='_blank'>
+				<button type="button" class="btn btn-success" >Apri file Fattibilità tecnica</button>
+			</a>
+		`	
+
+		if (sign_qa.length==0) {
+			html+=`<button onclick="$('#div_remove_ft').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma file Fattibilità tecnica</button>
+				
+				
+				<div id='div_remove_ft' class='form-group mt-3'  style='display:none'>
+					<label for="motivazione_elimina_ft">Motivazione elimina Fattibilità tecnica e firma*</label>
+					<textarea class="form-control" id="motivazione_elimina_ft"  name="motivazione_elimina_ft" rows="3"></textarea>
+					<input type='hidden' name='id_remove_ft' id='id_remove_ft' value='`+id_pns+`'>
+					
+					<button type="submit" onclick='remove_sign_ft()' class="btn btn-primary mt-2" name='btn_remove_ft' value='remove'>Conferma operazione di rimozione firma e file Fattibilità tecnica</button>					
+				</div>
+			`;
+		}
+		
+	}
 	
 	$("#bodyvalue").html(html)		
 	
@@ -287,6 +306,7 @@ function ins_doc() {
 	if (from=="5") title_doc="Definizione UDI-DI";
 	if (from=="6") title_doc="Definizione Altri documenti";
 	if (from=="7") title_doc="Definizione Documentazione tecnica";
+	if (from=="8") title_doc="Definizione Fattibilità tecnica";
 	if (from=="100") title_doc="Altro";
 	
 
@@ -303,16 +323,25 @@ function ins_doc() {
 		html=`<button type="submit" class="btn btn-outline-success"  onclick='sign_cert()' id='btn_sign' name='btn_sign' value='sign_cert' disabled>Firma</button>`
 		$("#div_save").html(html)
 	}
- 
-	file_tec=$("#info_tecnica"+id_pns).data("file_tec");
-	url_file=$("#info_tecnica"+id_pns).data("url_file");
-	sign_tecnica=$("#info_tecnica"+id_pns).data("sign_tecnica");
+	
 
-	if (from=="1" || from=="4" || from=="7") {
+	if (from=="8") {
+		html=`<button type="submit" class="btn btn-outline-success"  onclick='sign_ft()' id='btn_sign' name='btn_sign' value='sign_ft' disabled>Firma</button>`
+		$("#div_save").html(html)
+	}
+	file_tec="";url_file="";sign_tecnica="";
+	if (from=="7") {
+		file_tec=$("#info_tecnica"+id_pns).data("file_tec");
+		url_file=$("#info_tecnica"+id_pns).data("url_file");
+		sign_tecnica=$("#info_tecnica"+id_pns).data("sign_tecnica");
+	}
+
+	if (from=="1" || from=="4" || from=="7" || from=="8") {
 		operazione=""
 		if (from=="1") operazione="etic";
 		if (from=="4") operazione="cert";
 		if (from=="7") operazione="tecnica";
+		if (from=="8") operazione="ft";
 		html=""
 		html+="<center><div class='spinner-border text-secondary' role='status'></div></center>";
 
@@ -437,32 +466,7 @@ function ins_doc() {
 		$('#modalvalue').modal('show')		
 	}	
 	
-	if (from=="4old") {
-		html=`
-			<input type='hidden' name='id_pns_cert' value='`+id_pns+`'>
-			<div class='form-group '>
-				<div class="row mt-2">
-					<div class="col-md-8">
-						<label for="url_cert">URL certificato*</label>
-						<input type='text' class="form-control" id="url_cert"  name="url_cert" placeholder='Example: https://www.liofilchemstore.it/...' required>
-					</div>
-
-			
-					<div class="col-md-4">
-						<label for="data_cert">Data Certificato</label>
-						<input type="date" class="form-control" id="data_cert" name="data_cert"  required>
-					</div>
-				</div>
-			</div>
-		`;
-		
-		$("#bodyvalue").html(html)
-		html=`
-			<button type="submit" class="btn btn-success"   id='btn_sign' name='btn_sign' value='sign_cert'>Firma</button>
-		`;
-		$("#div_save").html(html)		
-		$('#modalvalue').modal('show')		
-	}	
+	
 
 
 	if (from=="5") {
@@ -619,6 +623,24 @@ function sign_cert() {
 
 	$("#id_pns_cert").val(sign_cert.id_pns)
 	$("#filename_cert").val(sign_cert.filename)
+	
+}
+
+function sign_ft() {
+	//impostato da elenco_pns.js o demo-config.js
+	if( typeof sign_ft.id_pns == 'undefined' ) {
+		event.preventDefault()
+		return false
+	}
+	data_ft=$("#data_ft").val()
+	if (data_ft.length==0) {
+		event.preventDefault()
+		alert("Per apporre la firma è necessario specificare una data!")
+		return false
+	}
+
+	$("#id_pns_ft").val(sign_ft.id_pns)
+	$("#filename_ft").val(sign_ft.filename)
 	
 }
 

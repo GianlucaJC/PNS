@@ -126,6 +126,21 @@ if (isset($_POST['file_tec']) && $_POST['file_tec']=="1") {
 	 </div>
 	<?php } 
 
+	if ($operazione=="ft") {?>
+	 <div class="form-group">
+		<div class="row mt-2">
+			<div class="col-md-4">
+				<input type='hidden' name='id_pns_ft' id='id_pns_ft'>
+				<input type='hidden' name='filename_ft' id='filename_ft'>
+			
+				<label for="data_ft">Data Fattibilità tecnica</label>
+				<input type="date" class="form-control" id="data_ft" name="data_ft" aria-describedby="Data Fattibilità tecnica">
+			</div>
+		</div>
+
+	 </div>
+	<?php } 
+
 
 	if ($operazione=="tecnica") {?>
 	 <div class="form-group">

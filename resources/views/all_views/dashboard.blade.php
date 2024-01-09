@@ -89,7 +89,7 @@ use App\Models\User;
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-		
+
 		@if ($user->hasRole('user'))
 
 			<div class="row">
@@ -98,26 +98,13 @@ use App\Models\User;
 						<div class="d-grid gap-2 mt-2">
 						  <button class="btn btn-primary" type="button">
 						  <i class="fas fa-clipboard-check" style='font-size:36px'></i><br>
-							CEDOLINI
+							TEST USER
 						  </button>
 						</div>
 					</a>
 				</div>	
 			</div>	
-
-			<div class="row">
-				<div class="col-md-12">
-					<a href="#">
-						<div class="d-grid gap-2 mt-2">
-						  <button class="btn btn-info" type="button">
-						  <i class="fas fa-lock" style='font-size:36px'></i>
-						  <br>
-							CAMBIO PASSWORD
-						  </button>
-						</div>
-					</a>
-				</div>	
-			</div>				
+			
 		@endif
 		
 		
@@ -141,7 +128,7 @@ use App\Models\User;
 		@endif	
 
 		
-		@if ($user->hasRole('admin'))
+		@if ($user->hasRole('admin') && 1==2)
 				<hr>
 				<div class="row">
 					<div class="col-md-12">

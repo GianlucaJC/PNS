@@ -503,6 +503,18 @@ function ins_doc() {
 					</div>
 
 				</div>
+				<div class="row mt-2">
+					<div class="form-check ml-2">
+					  <input class="form-check-input" type="checkbox" value="" id="check_list" required>
+					  <label class="form-check-label" for="check_list">
+						Controllo listini
+					  </label>
+					</div>
+
+				</div>
+
+
+
 			</div>
 		`;
 		

@@ -3,12 +3,14 @@ use App\Models\User;
 	$id = Auth::user()->id;
 	$user = User::find($id);
 	
+
 ?>
 @extends('all_views.viewmaster.index')
 
 @section('title', 'PNS')
 
 @section('operazioni')
+
 <!-- Pannello gestione utenza !-->
 	<div class="p-3">
 		<h5>Impostazioni globali</h5>

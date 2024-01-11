@@ -347,8 +347,8 @@
 					if ($altro_status==0) $js.="ins_doc();";
 					else $js.="view_doc();";
 				?>					
-				<a href="javascript:void(0)" title="Altri documenti">
-					<button type="button" class="btn btn-{{$colo_stato_altro}}" alt='Altri documenti'   onclick="{{$js}}" {{$stato_sign}}  ><i class="fas fa-file-alt fa-xs"></i></button>
+				<a href="javascript:void(0)" title="Controllo listini e altri documenti">
+					<button type="button" class="btn btn-{{$colo_stato_altro}}" alt='Controllo listini e altri documenti'   onclick="{{$js}}" {{$stato_sign}}  ><i class="fas fa-file-alt fa-xs"></i></button>
 				</a>
 				<span class='firme' style='display:none'>
 				<?php

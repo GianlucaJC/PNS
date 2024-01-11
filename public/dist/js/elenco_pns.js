@@ -107,7 +107,7 @@ function view_doc() {
 	if (from=="3") title_doc="Definizione Scheda sicurezza";
 	if (from=="4") title_doc="Definizione Certificato";
 	if (from=="5") title_doc="Definizione UDI-DI";
-	if (from=="6") title_doc="Definizione Altri documenti";
+	if (from=="6") title_doc="Definizione Controllo listini e altri documenti";
 	if (from=="8") title_doc="Definizione Fattibilità tecnica";
 	//from==7 --il view_doc di fatto viene fatto da ins_doc
 	if (from=="100") title_doc="Altro";
@@ -243,15 +243,15 @@ function view_doc() {
 		html=`Altri DOC:<hr><b>`+altri_doc+`</b>`
 
 		if (sign_qa.length==0) {
-			html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma Altri documenti</button>
+			html+=`<button onclick="$('#div_remove').toggle(120)" type="button" class="btn btn-outline-primary ml-2" >Rimuovi firma Controllo listini e altri documenti</button>
 			
 			
 			<div id='div_remove' class='form-group mt-3'  style='display:none'>
-				<label for="motivazione_elimina_altridoc">Motivazione elimina Altri Documenti e firma*</label>
+				<label for="motivazione_elimina_altridoc">Motivazione elimina Controllo listini e altri Documenti e firma*</label>
 				<textarea class="form-control" id="motivazione_elimina_altridoc"  name="motivazione_elimina_altridoc" rows="3"></textarea>
 				<input type='hidden' name='id_remove_altridoc' id='id_remove_altridoc' value='`+id_pns+`'>
 				
-				<button type="submit" onclick='remove_sign_altridoc()' class="btn btn-primary mt-2" name='btn_remove_altridoc' value='remove'>Conferma operazione di rimozione altri documenti</button>					
+				<button type="submit" onclick='remove_sign_altridoc()' class="btn btn-primary mt-2" name='btn_remove_altridoc' value='remove'>Conferma operazione di rimozione controllo listini e altri documenti</button>					
 			</div>
 			
 			`;
@@ -304,7 +304,7 @@ function ins_doc() {
 	if (from=="3") title_doc="Definizione Scheda sicurezza";
 	if (from=="4") title_doc="Definizione Certificato";
 	if (from=="5") title_doc="Definizione UDI-DI";
-	if (from=="6") title_doc="Definizione Altri documenti";
+	if (from=="6") title_doc="Definizione Controllo listini e altri documenti";
 	if (from=="7") title_doc="Definizione Documentazione tecnica";
 	if (from=="8") title_doc="Definizione Fattibilità tecnica";
 	if (from=="100") title_doc="Altro";

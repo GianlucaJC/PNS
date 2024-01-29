@@ -33,7 +33,17 @@ class mainController extends Controller
 {
 public function __construct()
 	{
+		
+		if (!Auth::user()) {
+				//non riesco ad invocare il logout
+
+		} 
+		$id_user=Auth::user()->id;
+		
+		
+		
 		$this->middleware('auth')->except(['index']);
+
 	}	
 	
 
@@ -122,7 +132,7 @@ public function __construct()
 		if (isset($last_ts_target[0])) {
 			$data_import=$last_ts_target[0]->last_ts;
 		}	
-		
+$data_import=date("Y-m-d H:i:s");		
 		if (strlen($data_import)>0) $this->import_code($data_import);
 		
 		return view('all_views/dashboard');

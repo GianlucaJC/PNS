@@ -34,11 +34,12 @@ class mainController extends Controller
 public function __construct()
 	{
 		
+		
 		if (!Auth::user()) {
 				//non riesco ad invocare il logout
 
-		} 
-		$id_user=Auth::user()->id;
+		} else  
+			$id_user=Auth::user()->id;
 		
 		
 		

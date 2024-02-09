@@ -130,13 +130,24 @@ public function __construct()
 	public function dashboard(Request $request) {
 		$last_ts_target=last_ts_target::where('id','=',1)->get();
 		//in caso di prima importazione decidere data fittizia di inizio import
-		$data_import="";
+		$data_importdb="";
 		if (isset($last_ts_target[0])) {
-			$data_import=$last_ts_target[0]->last_ts;
+			$data_importdb=$last_ts_target[0]->last_ts;
 		}	
-$datax=date("Y-m-d H:i:s");
-$data1 = strtotime("-1 days", strtotime($datax));
-$data_import=date("Y-m-d H:i:s", $data1);
+		$datax=date("Y-m-d H:i:s");
+		$data1 = strtotime("-1 days", strtotime($datax));
+
+		$d2=date("Y-m-d H:i:s", $data1);
+		if (strlen($data_importdb)!=0 && $data_importdb<$d2) {
+			
+			$data_import=$data_importdb;
+		}
+		else {
+			
+			$data_import=$d2;
+		}	
+		
+
 
 		if (strlen($data_import)>0) $this->import_code($data_import);
 		

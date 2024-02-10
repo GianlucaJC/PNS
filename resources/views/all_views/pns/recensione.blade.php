@@ -50,8 +50,13 @@
 	<input name="_token" type="hidden" value="{{ csrf_token() }}" id='token_csrf'>
 	
 	<?php
-		$dis="";
-		if ($sign_recensione!=null && $sign_recensione>0) $dis="disabled";
+		//disable controlli dopo firma disattivata dopo direttiva Matteo
+		//10.02.2024
+		$dis="";$view_sign=true;
+		if ($sign_recensione!=null && $sign_recensione>0) {
+			$dis="";
+			$view_sign=false;
+		}	
 		
 	?>
 
@@ -222,13 +227,14 @@
 			
 			<div class='container-fluid'>
 			
-				@if ($dis!="disabled")
-					<button type="submit" name='btn_save_recensione' id='btn_save_recensione' value="save" class="btn btn-success btn-lg btn">SALVA</button>  
-					
+				
+				<button type="submit" name='btn_save_recensione' id='btn_save_recensione' value="save" class="btn btn-success btn-lg btn mb-2">SALVA</button>  
+				@if ($view_sign==true)	
 					<button type="submit" name='btn_sign_recensione' id='btn_sign_recensione' value="sign" class="btn btn-primary btn-lg btn ml-3">FIRMA sezione</button>
 					<hr>
 				@endif
-				@if ($sign_recensione!=null && $sign_qa==null &&  $sign_ready==true) 
+				
+				@if ($sign_recensione!=null && $sign_qa==null &&  $sign_ready==true)  
 					<button type="submit" name='btn_sign_qa' id='btn_sign_qa' value="sign" class="btn btn-primary btn-lg btn-block">FIRMA QA</button>
 				@endif
 				<a href="{{ route('elenco_pns') }}">

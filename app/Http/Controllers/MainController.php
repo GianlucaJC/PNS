@@ -19,6 +19,7 @@ use App\Models\log_event;
 use App\Models\utenti;
 use App\Models\gspr;
 use App\Models\risk;
+use App\Models\db_set;
 
 use DB;
 use Mail;
@@ -46,6 +47,54 @@ public function __construct()
 		$this->middleware('auth')->except(['index']);
 
 	}	
+
+	public function mail_notif($id_pns,$from) {
+		$status=array();
+		
+		$db_set = db_set::find(1);
+		if (!isset($db_set)) return;
+		$info=$db_set->email_notif;
+		$emails=explode(";",$info);
+		for ($sca=0;$sca<=count($emails)-1;$sca++) {			
+			$email=$emails[$sca];
+			if (strlen($email)==0) continue;
+			try {
+				$msg="";
+				$data["email"] = $email;
+				$data["title"] = "Alert PNS";
+				if ($from==1)
+					$msg = "E' stata effettuata una modifica sul PNS\n\n";
+				else
+					$msg = "E' stata apposta la firma QA sulla scheda prodotto PNS\n\n";
+
+
+				//$prefix="http://localhost:8012";
+				$prefix="http://liojls02.ad.liofilchem.net:8012";
+				$lnk=$prefix."/pns/public/recensione/$id_pns";
+
+				$msg.="\nCliccare quì $lnk per i dettagli sul PNS";
+				
+				$data["body"]=$msg;
+				
+
+				Mail::send('emails.notifdoc', $data, function($message)use($data) {
+					$message->to($data["email"], $data["email"])
+					->subject($data["title"]);
+
+				});
+				
+				$status[$sca]['status']="OK";
+				$status[$sca]['message']="Mail $email inviata con successo";
+				
+				
+				
+			} catch (Throwable $e) {
+				$status[$sca]['status']="KO";
+				$status[$sca]['message']="Errore $email occorso durante l'invio! $e";
+			}
+		}
+	}
+	
 	
 
     public function exportParco(Request $request){
@@ -147,11 +196,26 @@ public function __construct()
 			$data_import=$d2;
 		}	
 		
-
-
 		if (strlen($data_import)>0) $this->import_code($data_import);
-		
-		return view('all_views/dashboard');
+
+		if ($request->has("btn_save")) {
+			$email_notif=$request->input('email_notif');
+			$codici_esclusi=$request->input('codici_esclusi');
+			$db_set = db_set::find(1);
+			if	(!isset($db_set)) $db_set=new db_set;
+			$db_set->email_notif=$email_notif;
+			$db_set->codici_esclusi=$codici_esclusi;
+			$db_set->save();
+		}
+		$db_set = db_set::find(1);
+		$email_notif="";$codici_esclusi="";
+		if	(isset($db_set)) {
+			$email_notif=$db_set->email_notif;
+			$codici_esclusi=$db_set->codici_esclusi;
+		}
+
+		return view('all_views/dashboard',compact('email_notif','codici_esclusi'));
+	
 	}
 	
 
@@ -201,7 +265,9 @@ public function __construct()
 			$log_event->operazione="UPDATE";
 			$log_event->modulo="recensione_pns";
 			$log_event->dettaglio=$log;
-			$log_event->save();			
+			$log_event->save();	
+			if ($btn_save_recensione=="save")
+				$this->mail_notif($id,1);
 		}
 		if ($btn_sign_recensione=="sign") {
 			$dx=date("Y-m-d");
@@ -219,7 +285,7 @@ public function __construct()
 			$log_event->operazione="INSERT";
 			$log_event->modulo="recensione_pns";
 			$log_event->dettaglio="SIGN Recensione";
-			$log_event->save();				
+			$log_event->save();	
 		}
 		$btn_sign_qa=$request->input("btn_sign_qa");
 		if ($btn_sign_qa=="sign") {
@@ -237,7 +303,8 @@ public function __construct()
 			$log_event->operazione="INSERT";
 			$log_event->modulo="recensione_pns";
 			$log_event->dettaglio="SIGN QA";
-			$log_event->save();				
+			$log_event->save();
+			$this->mail_notif($id,2);			
 		}
 	
 		$recensione=prodotti::where('id', $id)->get();

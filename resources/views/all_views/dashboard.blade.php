@@ -19,15 +19,16 @@ use App\Models\User;
 				<input name="_token" type="hidden" value="{{ csrf_token() }}" id='token_csrf'>
 			
 				<div class="form-group">
-					<label for="email_parco">Email notifiche</label>
-					<input type="email" class="form-control" id="email_parco" name="email_parco" aria-describedby="email_parco" placeholder="E-mail"  maxlength=150 onkeyup="this.value = this.value.toLowerCase();" value="{{$email_parco ?? ''}}" >
+					<label for="email_notif">Email notifiche</label>
+					<textarea class="form-control" id="email_notif" name='email_notif' rows="3" placeholder='Usare punto e virgola per separare le email'>{{$email_notif ?? ''}}</textarea>
+  				
 				</div>
 				<div class="form-group">
-					<label for="codici_esclusi">Codici da escludere</label>
-					<input type="text" class="form-control" id="codici_esclusi" name="codici_esclusi" aria-describedby="codici_esclusi" placeholder="Elenco codici"value="{{$codici_esclusi ?? ''}}" >
+					<label for="codici_esclusi">Codici esclusi</label>
+					<textarea class="form-control" id="codici_esclusi" name='codici_esclusi' rows="3" placeholder='Usare punto e virgola per separare i codici'>{{$codici_esclusi ?? ''}}</textarea>					
 				</div>
 
-			<button type="submit" id="btn_save" name="btn_save" class="btn btn-primary">Salva impostazioni</button>
+			<button type="submit" id="btn_save" name="btn_save" value="1" class="btn btn-primary">Salva impostazioni</button>
 				
 			</form>	
 		</p>

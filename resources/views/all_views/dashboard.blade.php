@@ -25,7 +25,7 @@ use App\Models\User;
 				</div>
 				<div class="form-group">
 					<label for="codici_esclusi">Codici esclusi</label>
-					<textarea class="form-control" id="codici_esclusi" name='codici_esclusi' rows="3" placeholder='Usare punto e virgola per separare i codici'>{{$codici_esclusi ?? ''}}</textarea>					
+					<textarea class="form-control" id="codici_esclusi" name='codici_esclusi' rows="3" disabled placeholder='Usare punto e virgola per separare i codici'>{{$codici_esclusi ?? ''}}</textarea>					
 				</div>
 
 			<button type="submit" id="btn_save" name="btn_save" value="1" class="btn btn-primary">Salva impostazioni</button>

@@ -19,10 +19,16 @@ use App\Models\User;
 				<input name="_token" type="hidden" value="{{ csrf_token() }}" id='token_csrf'>
 			
 				<div class="form-group">
-					<label for="email_notif">Email notifiche</label>
+					<label for="email_notif">Email notifiche edit/view/sign</label>
 					<textarea class="form-control" id="email_notif" name='email_notif' rows="3" placeholder='Usare punto e virgola per separare le email'>{{$email_notif ?? ''}}</textarea>
-  				
 				</div>
+
+				<div class="form-group">
+					<label for="email_notif_green">Email notifiche 'green'</label>
+					<textarea class="form-control" id="email_notif_green" name='email_notif_green' rows="3" placeholder='Usare punto e virgola per separare le email'>{{$email_notif_green ?? ''}}</textarea>
+				</div>
+				
+				
 				<div class="form-group">
 					<label for="codici_esclusi">Codici esclusi</label>
 					<textarea class="form-control" id="codici_esclusi" name='codici_esclusi' rows="3" disabled placeholder='Usare punto e virgola per separare i codici'>{{$codici_esclusi ?? ''}}</textarea>					

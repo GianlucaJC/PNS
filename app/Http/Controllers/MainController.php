@@ -53,7 +53,11 @@ public function __construct()
 		
 		$db_set = db_set::find(1);
 		if (!isset($db_set)) return;
-		$info=$db_set->email_notif;
+		if ($from==1 || $from==2)
+			$info=$db_set->email_notif;
+		if ($from==3) 
+			$info=$db_set->email_notif_green;
+		else return false;
 		$emails=explode(";",$info);
 		for ($sca=0;$sca<=count($emails)-1;$sca++) {			
 			$email=$emails[$sca];
@@ -64,8 +68,10 @@ public function __construct()
 				$data["title"] = "Alert PNS";
 				if ($from==1)
 					$msg = "E' stata effettuata una modifica sul PNS\n\n";
-				else
+				if ($from==2)
 					$msg = "E' stata apposta la firma QA sulla scheda prodotto PNS\n\n";
+				if ($from==3)
+					$msg = "Il PNS è concluso\n\n";
 
 
 				//$prefix="http://localhost:8012";
@@ -200,21 +206,24 @@ public function __construct()
 
 		if ($request->has("btn_save")) {
 			$email_notif=$request->input('email_notif');
+			$email_notif_green=$request->input('email_notif_green');
 			$codici_esclusi=$request->input('codici_esclusi');
 			$db_set = db_set::find(1);
 			if	(!isset($db_set)) $db_set=new db_set;
 			$db_set->email_notif=$email_notif;
+			$db_set->email_notif_green=$email_notif_green;
 			$db_set->codici_esclusi=$codici_esclusi;
 			$db_set->save();
 		}
 		$db_set = db_set::find(1);
-		$email_notif="";$codici_esclusi="";
+		$email_notif="";$email_notif_green="";$codici_esclusi="";
 		if	(isset($db_set)) {
 			$email_notif=$db_set->email_notif;
+			$email_notif_green=$db_set->email_notif_green;
 			$codici_esclusi=$db_set->codici_esclusi;
 		}
 
-		return view('all_views/dashboard',compact('email_notif','codici_esclusi'));
+		return view('all_views/dashboard',compact('email_notif','email_notif_green','codici_esclusi'));
 	
 	}
 	
@@ -692,11 +701,22 @@ public function __construct()
 		
 		
 		
-		$elenco_pns=DB::table('prodotti')
+		$elenco_tmp=DB::table('prodotti')
 		->when($view_dele=="0", function ($elenco_pns) {
 			return $elenco_pns->where('dele', "=","0");
-		})
-		->orderBy('id','desc')->get();
+		});
+		$elenco_pns=$elenco_tmp->orderBy('id','desc')->get();
+
+		//invio mail (se non già fatto in precedenza) per notifiche conclusi
+		$sends=$elenco_tmp->where('sign_qa','=',1)->where('send_mail_close','=',0)->get();
+		
+		foreach($sends as $send) {
+			$id_send=$send->id;
+			$this->mail_notif($id_send,3);
+			$up=prodotti::find($id_send);
+			$up->send_mail_close=1;
+			$up->save();
+		}
 
 		return view('all_views/pns/elenco_pns')->with("view_dele",$view_dele)->with("elenco_pns",$elenco_pns)->with('arr_utenti',$arr_utenti)->with('view_log',$view_log)->with('cur_page',$cur_page);
 

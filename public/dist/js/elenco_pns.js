@@ -87,7 +87,11 @@ $(document).ready( function () {
 	
 } );
 
-
+function set_filtro() {
+	filtro_chiusi=$("#filtro_chiusi").val()
+	if (filtro_chiusi=="0") $("#filtro_chiusi").val('1')
+	else $("#filtro_chiusi").val('0')
+}
 function view_doc() {
 
 	id_pns=0;from=0;resource_file="";sign_qa=""

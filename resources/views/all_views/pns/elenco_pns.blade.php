@@ -133,7 +133,16 @@
 					</p>
 				</div>
 
-				<div class="col-md-12">
+				<div class="col-md-4">
+					<?php 
+						$out="";
+						if($filtro_chiusi=='0') $out="-outline";
+					?>	
+					<button type="submit" onclick="set_filtro()" class="btn btn{{$out}}-success">Filtra PNS chiusi</button>
+					<input type='hidden' name='filtro_chiusi' id='filtro_chiusi' value='{{$filtro_chiusi}}'>
+				</div>
+			
+				<div class="col-md-12 mt-3">
 					
 					<table id='tbl_pns' class="display">
 						<thead>
@@ -263,6 +272,6 @@
 	
 	
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.176"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.178"></script>
 
 @endsection

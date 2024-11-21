@@ -361,6 +361,8 @@ public function __construct()
 	
 		$view_dele=$request->input("view_dele");
 		$cur_page=$request->input("cur_page");
+		$filtro_chiusi=$request->input("filtro_chiusi");
+		if (strlen($filtro_chiusi)==0) $filtro_chiusi="0";
 
 		$log_id=$request->input("log_id");
 		$view_log=array();
@@ -704,6 +706,9 @@ public function __construct()
 		$elenco_tmp=DB::table('prodotti')
 		->when($view_dele=="0", function ($elenco_pns) {
 			return $elenco_pns->where('dele', "=","0");
+		})
+		->when($filtro_chiusi!="0", function ($elenco_pns) {
+			return $elenco_pns->whereNotNull('sign_qa');
 		});
 		$elenco_pns=$elenco_tmp->orderBy('id','desc')->get();
 
@@ -718,7 +723,7 @@ public function __construct()
 			$up->save();
 		}
 
-		return view('all_views/pns/elenco_pns')->with("view_dele",$view_dele)->with("elenco_pns",$elenco_pns)->with('arr_utenti',$arr_utenti)->with('view_log',$view_log)->with('cur_page',$cur_page);
+		return view('all_views/pns/elenco_pns')->with("view_dele",$view_dele)->with("elenco_pns",$elenco_pns)->with('arr_utenti',$arr_utenti)->with('view_log',$view_log)->with('cur_page',$cur_page)->with('filtro_chiusi',$filtro_chiusi);
 
 	}		
 		

@@ -708,7 +708,7 @@ public function __construct()
 			return $elenco_pns->where('dele', "=","0");
 		})
 		->when($filtro_chiusi!="0", function ($elenco_pns) {
-			return $elenco_pns->whereNotNull('sign_qa');
+			return $elenco_pns->where('sign_qa','=',null);
 		});
 		$elenco_pns=$elenco_tmp->orderBy('id','desc')->get();
 

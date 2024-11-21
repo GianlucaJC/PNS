@@ -138,7 +138,7 @@
 						$out="";
 						if($filtro_chiusi=='0') $out="-outline";
 					?>	
-					<button type="submit" onclick="set_filtro()" class="btn btn{{$out}}-success">Filtra PNS chiusi</button>
+					<button type="submit" onclick="set_filtro()" class="btn btn{{$out}}-success">Solo PNS aperti</button>
 					<input type='hidden' name='filtro_chiusi' id='filtro_chiusi' value='{{$filtro_chiusi}}'>
 				</div>
 			

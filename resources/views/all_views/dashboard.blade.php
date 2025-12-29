@@ -1,8 +1,5 @@
 <?php
-use App\Models\User;
-	$id = Auth::user()->id;
-	$user = User::find($id);
-	
+	$user = Auth::user();
 
 ?>
 @extends('all_views.viewmaster.index')
@@ -99,27 +96,11 @@ use App\Models\User;
     <div class="content">
       <div class="container-fluid">
 
-		@if ($user->hasRole('user'))
 
-			<div class="row">
-				<div class="col-md-12">
-					<a href="#">
-						<div class="d-grid gap-2 mt-2">
-						  <button class="btn btn-primary" type="button">
-						  <i class="fas fa-clipboard-check" style='font-size:36px'></i><br>
-							TEST USER
-						  </button>
-						</div>
-					</a>
-				</div>	
-			</div>	
-			
-		@endif
 		
 		
 		
-	    @if ($user->hasRole('admin') || ($user->hasRole('coord'))  || ($user->hasRole('resp')) )
-				@if(!($user->hasRole('resp')))
+
 				<div class="row">
 					<div class="col-md-12">
 					<a href="{{route('elenco_pns')}}">
@@ -132,26 +113,9 @@ use App\Models\User;
 					</a>
 					</div>
 				</div>
-				@endif
-
-		@endif	
 
 		
-		@if ($user->hasRole('admin') && 1==2)
-				<hr>
-				<div class="row">
-					<div class="col-md-12">
-					<a href="#">
-						<div class="d-grid gap-2 mt-2">
-						  <button class="btn btn-info" type="button">
-						  <i class="fas fa-users-cog"  style='font-size:36px'></i><br>
-							GESTIONE UTENTI
-						  </button>
-						</div>
-					</a>
-					</div>
-				</div>		
-		@endif		
+	
 
 
       </div><!-- /.container-fluid -->

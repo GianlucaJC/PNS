@@ -26,15 +26,9 @@ use App\Models\User;
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-			@if ($user->hasRole('admin'))
-				<img src="{{ URL::asset('/') }}dist/img/AdminLTELogo.png" class="img-circle elevation-2" alt="User Image">
-			@elseif ($user->hasRole('coord'))
-				<img src="{{ URL::asset('/') }}dist/img/coord.png" class="img-circle elevation-2" alt="User Image">
-			@elseif ($user->hasRole('resp'))
-				<img src="{{ URL::asset('/') }}dist/img/resp.png" class="img-circle elevation-2" alt="User Image">
-			@else	
-				<img src="{{ URL::asset('/') }}dist/img/avatar1.png" class="img-circle elevation-2" alt="User Image">
-			@endif
+		
+		<img src="{{ URL::asset('/') }}dist/img/AdminLTELogo.png" class="img-circle elevation-2" alt="User Image">
+
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->operatore}}</a>
@@ -58,7 +52,7 @@ use App\Models\User;
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-			@if ($user->hasRole('admin'))
+			
 			 <li class="nav-item menu">
 				<a href="#" class="nav-link">
 				  <i class="fas fa-bars"></i>
@@ -104,7 +98,7 @@ use App\Models\User;
 
 				</ul>
 			  </li>
-			 @endif 
+			
 			
 
 

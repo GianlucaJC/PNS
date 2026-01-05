@@ -62,7 +62,7 @@ class utenti extends Authenticatable
     public static function verifica($testUser, $testPass)
     {
         // Rilevamento ambiente
-        if (app()->isLocal() || in_array(request()->ip(), ['127.0.0.1', '::1'])) {
+        if ((app()->isLocal() || in_array(request()->ip(), ['127.0.0.1', '::1']))  && 1==1) {
             $apiUrl = 'https://localhost:8012/api_user_liof/api_login.php';
         } else {
             $apiUrl = 'http://liojls02.ad.liofilchem.net:8012/api_user_liof/api_login.php';
@@ -91,8 +91,6 @@ class utenti extends Authenticatable
             if (($json['success'] ?? false) === true) {
                 $rows['header']['login'] = "OK";
                 $rows['operatore'] = $json['operatore'];
-                $rows['admin_sos'] = $json['admin_sos'] ?? null;
-                $rows['rst_sos'] = $json['rst_sos'] ?? null;
             } else {
                 $rows['header']['login'] = "KO";
                 $rows['header']['error'] = $json['message'] ?? 'Errore sconosciuto';

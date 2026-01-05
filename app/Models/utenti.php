@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class utenti extends Authenticatable
 {
@@ -80,6 +81,11 @@ class utenti extends Authenticatable
                 'app_name'  => 'SOS'
             ]);
         } catch (\Exception $e) {
+            Log::error('API Login fallito - Errore di connessione', [
+                'username' => $testUser,
+                'api_url' => $apiUrl,
+                'exception' => $e->getMessage()
+            ]);
             return ['header' => ['login' => "KO", 'error' => "ERRORE CONNESSIONE: " . $e->getMessage()]];
         }
 
@@ -94,10 +100,21 @@ class utenti extends Authenticatable
             } else {
                 $rows['header']['login'] = "KO";
                 $rows['header']['error'] = $json['message'] ?? 'Errore sconosciuto';
+                Log::warning('API Login fallito - Credenziali non valide o altro errore API', [
+                    'username' => $testUser,
+                    'api_url' => $apiUrl,
+                    'response_json' => $json
+                ]);
             }
         } else {
             $rows['header']['login'] = "KO";
             $rows['header']['error'] = "Errore Server: " . $response->status();
+            Log::error('API Login fallito - Risposta non successful', [
+                'username' => $testUser,
+                'api_url' => $apiUrl,
+                'status_code' => $response->status(),
+                'response_body' => $response->body()
+            ]);
         }
 
         return $rows;

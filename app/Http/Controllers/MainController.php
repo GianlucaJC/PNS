@@ -128,7 +128,7 @@ public function __construct()
 
 		//02.03.2026 fix bug ora nulla
 		// $data_import rappresenta l'ultima volta che l'app PNS si è connessa
-		$all_data = ArtAna::from('ART_ANA as aa')
+		$all_data = art_ana::from('ART_ANA as aa')
 			->select(
 				"aa.DATA_INSERIMENTO",
 				"aa.COD_ART",

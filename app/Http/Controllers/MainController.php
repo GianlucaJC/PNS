@@ -115,7 +115,6 @@ public function __construct()
 	
 	
 	public function import_code($data_import) {
-		$data_import="2026-01-01 00:00:00";
 		$cond="cast(concat(substr(aa.DATA_INSERIMENTO,1,10),' ',substr(aa.ORA_INS,12)) as datetime)>='$data_import'";
 		/*
 		$all_data=art_ana::from('ART_ANA as aa')

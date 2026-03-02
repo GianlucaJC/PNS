@@ -115,14 +115,34 @@ public function __construct()
 	
 	
 	public function import_code($data_import) {
-		
+		$data_import="2026-01-01 00:00:00";
 		$cond="cast(concat(substr(aa.DATA_INSERIMENTO,1,10),' ',substr(aa.ORA_INS,12)) as datetime)>='$data_import'";
+		/*
 		$all_data=art_ana::from('ART_ANA as aa')
 		->select("aa.DATA_INSERIMENTO","aa.COD_ART","aa.DES_ART","aa.COD_CAT","au.TEMPERATURA","au.GGSCAD","au.MINORDCLI")
 		->leftjoin('ART_USER as au','aa.COD_ART','au.COD_ART')
 		->whereRaw($cond)		
 		->orderBy('aa.DATA_INSERIMENTO')
 		->get();
+		*/
+
+		//02.03.2026 fix bug ora nulla
+		// $data_import rappresenta l'ultima volta che l'app PNS si è connessa
+		$all_data = ArtAna::from('ART_ANA as aa')
+			->select(
+				"aa.DATA_INSERIMENTO",
+				"aa.COD_ART",
+				"aa.DES_ART",
+				"aa.COD_CAT",
+				"au.TEMPERATURA",
+				"au.GGSCAD",
+				"au.MINORDCLI"
+			)
+			->leftJoin('ART_USER as au', 'aa.COD_ART', '=', 'au.COD_ART')
+			->whereRaw("CAST(CONCAT(DATE(aa.DATA_INSERIMENTO), ' ', IFNULL(aa.ORA_INS, '00:00:00')) AS DATETIME) >= ?", [$data_import])
+			->orderBy('aa.DATA_INSERIMENTO', 'ASC')
+			->get();
+
 
 		$data_up=date("Y-m-d H:i:s");
 		foreach($all_data as $data) {

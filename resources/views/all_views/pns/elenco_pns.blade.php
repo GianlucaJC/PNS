@@ -49,6 +49,12 @@
     <div class="content">
       <div class="container-fluid">
 
+		@if (session('success'))
+			<div class="alert alert-success" role="alert">
+				{{ session('success') }}
+			</div>
+		@endif
+
 		<form method='post' action="{{ route('elenco_pns') }}" id='frm_pns' name='frm_pns' autocomplete="off">
 			<input name="_token" type="hidden" value="{{ csrf_token() }}" id='token_csrf'>
 			<input type="hidden" value="{{url('/')}}" id="url" name="url">
@@ -141,6 +147,11 @@
 					<button type="submit" onclick="set_filtro()" class="btn btn{{$out}}-success">Solo PNS aperti</button>
 					<input type='hidden' name='filtro_chiusi' id='filtro_chiusi' value='{{$filtro_chiusi}}'>
 				</div>
+				<div class="col-md-4">
+					<button type="button" class="btn btn-info" onclick="manual_import()">
+						Aggiornamento manuale da Target
+					</button>
+				</div>
 			
 				<div class="col-md-12 mt-3">
 					
@@ -176,6 +187,7 @@
 					<input type='hidden' id='dele_contr' name='dele_contr'>
 					<input type='hidden' id='restore_contr' name='restore_contr'>
 					<input type='hidden' id='log_id' name='log_id'>
+					<input type="hidden" name="data_import_manuale" id="data_import_manuale">
 				
 			  </div>
 
@@ -271,6 +283,41 @@
 	<!-- fine DataTables !-->
 	
 	
+	<script>
+		function manual_import() {
+			$('#title_doc').html("Aggiornamento manuale da Target");
+			
+			let html = `
+				<div class="alert alert-info" role="alert">
+					Selezionare una data dalla quale importare i dati da Target. L'operazione potrebbe richiedere del tempo.
+				</div>
+				<div class="form-group">
+					<label for="data_import">Data di importazione</label>
+					<input type="date" class="form-control" id="data_import" value="{{ date('Y-m-d') }}">
+				</div>
+			`;
+			$('#bodyvalue').html(html);
+
+			let footer = `
+				<button type="button" class="btn btn-primary" onclick="confirm_import()">Conferma e importa</button>
+			`;
+			$('#div_save').html(footer);
+
+			$('#modalvalue').modal('show');
+		}
+
+		function confirm_import() {
+			let data_import = $('#data_import').val();
+			if (!data_import) {
+				alert("Selezionare una data valida.");
+				return;
+			}
+			
+			$('#data_import_manuale').val(data_import + " 00:00:00");
+			$('#frm_pns').submit();
+			
+		}
+	</script>
 
 	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.178"></script>
 

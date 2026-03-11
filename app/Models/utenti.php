@@ -64,7 +64,7 @@ class utenti extends Authenticatable
     {
         // Rilevamento ambiente
         if (in_array(request()->ip(), ['127.0.0.1', '::1'])) {
-            $apiUrl = 'http://localhost:8012/api_user_liof/api_login.php';
+            $apiUrl = 'https://localhost:8012/api_user_liof/api_login.php';
         } else {
             $apiUrl = 'http://liojls02.ad.liofilchem.net:8012/api_user_liof/api_login.php';
         }

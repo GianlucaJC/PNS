@@ -114,7 +114,7 @@ public function __construct()
     }
 	
 	
-	public function import_code($data_import) {
+	public function import_code($data_import, $manual_import = false) {
 		
 		/*
 		$cond="cast(concat(substr(aa.DATA_INSERIMENTO,1,10),' ',substr(aa.ORA_INS,12)) as datetime)>='$data_import'";
@@ -129,7 +129,7 @@ public function __construct()
 
 		//02.03.2026 fix bug ora nulla
 		// $data_import rappresenta l'ultima volta che l'app PNS si è connessa
-		$all_data = art_ana::from('ART_ANA as aa')
+		$query = art_ana::from('ART_ANA as aa')
 			->select(
 				"aa.DATA_INSERIMENTO",
 				"aa.COD_ART",
@@ -139,11 +139,18 @@ public function __construct()
 				"au.GGSCAD",
 				"au.MINORDCLI"
 			)
-			->leftJoin('ART_USER as au', 'aa.COD_ART', '=', 'au.COD_ART')
-			->whereRaw("CAST(CONCAT(DATE(aa.DATA_INSERIMENTO), ' ', IFNULL(aa.ORA_INS, '00:00:00')) AS DATETIME) >= ?", [$data_import])
-			->orderBy('aa.DATA_INSERIMENTO', 'ASC')
+			->leftJoin('ART_USER as au', 'aa.COD_ART', '=', 'au.COD_ART');
+
+		if ($manual_import) {
+			$query->whereRaw("DATE(aa.DATA_INSERIMENTO) >= DATE(?)", [$data_import]);
+		} else {
+			$query->whereRaw("CAST(CONCAT(DATE(aa.DATA_INSERIMENTO), ' ', IFNULL(aa.ORA_INS, '00:00:00')) AS DATETIME) >= ?", [$data_import]);
+		}
+		$all_data = $query->orderBy('aa.DATA_INSERIMENTO', 'ASC')
 			->get();
 
+		$nuovi_record = 0;
+		$record_aggiornati = 0;
 
 		$data_up=date("Y-m-d H:i:s");
 		foreach($all_data as $data) {
@@ -174,10 +181,13 @@ public function __construct()
 			$info_prod=DB::table('prodotti')->select('id')->where('codice','=',$codice);
 			$count=$info_prod->count();
 			if ($count==0)
+				{
 				$prodotto=new prodotti;
-			else {
+				$nuovi_record++;
+			} else {
 				$ref=$info_prod->get();
 				$prodotto = prodotti::find($ref[0]->id);
+				$record_aggiornati++;
 			}	
 			
 			$t_c="";
@@ -199,6 +209,8 @@ public function __construct()
 		$last_ts_target = last_ts_target::find(1);
 		$last_ts_target->last_ts=$data_up;
 		$last_ts_target->save();
+		
+		return ['nuovi' => $nuovi_record, 'aggiornati' => $record_aggiornati];
 		
 	}
 	
@@ -368,6 +380,14 @@ public function __construct()
 	
 	
 	public function elenco_pns(Request $request){
+		$data_import_manuale = $request->input("data_import_manuale");
+		if (strlen($data_import_manuale) > 0) {
+			$risultato_import = $this->import_code($data_import_manuale, true);
+			$nuovi = $risultato_import['nuovi'];
+			$aggiornati = $risultato_import['aggiornati'];
+			$request->session()->flash('success', "Importazione manuale completata! Record aggiunti: $nuovi, Record aggiornati: $aggiornati.");
+		}
+
 		$utenti=utenti::select('id','operatore')->get();
 		$arr_utenti=array();
 		foreach($utenti as $u) {

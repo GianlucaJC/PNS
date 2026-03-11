@@ -139,7 +139,13 @@
 					</p>
 				</div>
 
-				<div class="col-md-4">
+				<div class="col-md-12">
+					<button type="button" class="btn btn-info" onclick="manual_import()">
+						Aggiornamento
+					</button>
+				</div>
+				
+				<div class="col-md-4 mt-2">
 					<?php 
 						$out="";
 						if($filtro_chiusi=='0') $out="-outline";
@@ -147,11 +153,7 @@
 					<button type="submit" onclick="set_filtro()" class="btn btn{{$out}}-success">Solo PNS aperti</button>
 					<input type='hidden' name='filtro_chiusi' id='filtro_chiusi' value='{{$filtro_chiusi}}'>
 				</div>
-				<div class="col-md-4">
-					<button type="button" class="btn btn-info" onclick="manual_import()">
-						Aggiornamento manuale da Target
-					</button>
-				</div>
+
 			
 				<div class="col-md-12 mt-3">
 					

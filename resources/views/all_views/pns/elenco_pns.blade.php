@@ -180,6 +180,9 @@
 								<th style='width:40px'>status</th>
 								<th style='width:70px'>Codice</th>
 								<th>Descrizione</th>
+								<td style='width:120px'>
+								 	Data Target
+								</td>								
 								<th style='width:120px'>Data creazione</th>
 								<th style='width:120px'>LastUpdate</th>
 								<th style='width:70px'>IVD</th>
@@ -322,6 +325,6 @@
 		}
 	</script>
 
-	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.178"></script>
+	<script src="{{ URL::asset('/') }}dist/js/elenco_pns.js?ver=1.179"></script>
 
 @endsection

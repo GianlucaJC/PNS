@@ -114,6 +114,9 @@
 		</td>
 
 		<td style='width:120px'>
+			{{ $pns->data_target }}
+		</td>
+		<td style='width:120px'>
 			{{ $pns->created_at }}
 		</td>
 		<td style='width:120px'>

@@ -164,6 +164,7 @@
 								<th style='width:40px'>Edit/View</th>
 								<th style='width:40px'>Status</th>
 								<th>Descrizione</th>
+								<th style='width:120px'>Data Target</th>
 								<th style='width:120px'>Data creazione</th>
 								<th style='width:120px'>LastUpdate</th>
 								<th style='width:70px'>IVD</th>

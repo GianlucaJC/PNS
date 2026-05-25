@@ -132,6 +132,7 @@ public function __construct()
 		$query = art_ana::from('ART_ANA as aa')
 			->select(
 				"aa.DATA_INSERIMENTO",
+				"aa.ORA_INS",
 				"aa.COD_ART",
 				"aa.DES_ART",
 				"aa.COD_CAT",
@@ -154,12 +155,15 @@ public function __construct()
 
 		$data_up=date("Y-m-d H:i:s");
 		foreach($all_data as $data) {
-			//$data_up=$data->DATA_INSERIMENTO;
+			$data_ins=$data->DATA_INSERIMENTO;
+			$ora_ins=$data->ORA_INS;
 			$codice=$data->COD_ART;
 			$pre=substr($codice,0,1);
 			$procedi=false;
 			if ($pre=="0" || $pre=="1" || $pre=="2" || $pre=="3" || $pre=="4" || $pre=="5" || $pre=="6" || $pre=="7" || $pre=="8" || $pre=="9") $procedi=true;
-			
+			$data_target=$data_up;
+			if ($data_ins!=null && $ora_ins!=null) 
+				$data_target=substr($data_ins,0,10)." ".substr($ora_ins,11,8);
 			if (substr($codice,0,3)=="655") $procedi=false;
 				
 			if ($procedi==false) continue;
@@ -198,6 +202,7 @@ public function __construct()
 			if ($temperatura_conservazione=="003") $t_c="CONGELATORE";
 		
 			$prodotto->codice=$codice;
+			$prodotto->data_target=$data_target;
 			$prodotto->descrizione=$descrizione;
 			$prodotto->temperatura_conservazione=$t_c;
 			$prodotto->gg_validita=$gg_validita;
